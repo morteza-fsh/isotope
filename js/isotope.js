@@ -84,7 +84,9 @@ var trim = String.prototype.trim ?
     layoutMode: 'masonry',
     isJQueryFiltering: true,
     sortAscending: true,
-  } );
+    pagination: false,
+    perPageItems: 20
+  });
 
   Isotope.Item = Item;
   Isotope.LayoutMode = LayoutMode;
