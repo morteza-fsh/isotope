@@ -81,7 +81,9 @@ var trim = String.prototype.trim ?
   var Isotope = Outlayer.create( 'isotope', {
     layoutMode: 'masonry',
     isJQueryFiltering: true,
-    sortAscending: true
+    sortAscending: true,
+    pagination: false,
+    perPageItems: 20
   });
 
   Isotope.Item = Item;
