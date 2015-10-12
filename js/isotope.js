@@ -269,6 +269,8 @@ var trim = String.prototype.trim ?
     }
 
     this.filteredItems = matches;
+
+    this.dispatchEvent( 'paginationUpdate', null, [ this._currentPage, this.totalPage(), this.filteredItems ]);
   };
 
   // change current page of isotope
