@@ -260,10 +260,10 @@ var getText = docElem.textContent ?
     }
 
     var startItemInPage = ( this._currentPage - 1 ) * this.options.perPageItems,
-        endItemInPage = startItemInPage + this.options.perPageItems - 1,
+        endItemInPage = startItemInPage + this.options.perPageItems,
         result = this.filteredItems,
-        matches = result.slice(startItemInPage, endItemInPage + 1),
-        needHide = result.slice(0, startItemInPage).concat(result.slice(endItemInPage + 1));
+        matches = result.slice( startItemInPage, endItemInPage ),
+        needHide = result.slice( 0, startItemInPage ).concat( result.slice( endItemInPage ) );
 
     // hide needHide items
     var _this = this;
