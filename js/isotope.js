@@ -98,7 +98,8 @@ var trim = String.prototype.trim ?
     this._getSorters();
     // call super
     Outlayer.prototype._create.call( this );
-
+    // current page
+    this._currentPage = 1;
     // create layout modes
     this.modes = {};
     // start filteredItems with all items
@@ -186,6 +187,12 @@ var trim = String.prototype.trim ?
     }
 
     this._sort();
+
+    if ( this.options.pagination ) {
+
+      this._pagination();
+    }
+
     this._layout();
   };
   // alias to _init for main plugin method
@@ -195,6 +202,7 @@ var trim = String.prototype.trim ?
     this.reveal( filtered.needReveal );
     this.hide( filtered.needHide );
   };
+
 
   // HACK
   // Don't animate/transition first layout
@@ -232,6 +240,73 @@ var trim = String.prototype.trim ?
     });
   };
 
+  // -------------------------- page -------------------------- //
+  
+  // private method to devide filtered items to pages
+  Isotope.prototype._pagination = function() {
+    // move to fist page if filter changed
+    if ( this._lastFilter !== this.options.filter ) {
+      this._lastFilter = this.options.filter;
+      this._currentPage = 1;
+    }
+
+    var startItemInPage = ( this._currentPage - 1 ) * this.options.perPageItems,
+        endItemInPage = startItemInPage + this.options.perPageItems - 1,
+        result = this.filteredItems,
+        matches = result.slice(startItemInPage, endItemInPage + 1),
+        needHide = result.slice(0, startItemInPage).concat(result.slice(endItemInPage + 1));
+
+    // hide needHide items
+    var _this = this;
+    function hide() {
+      _this.hide( needHide );
+    }
+
+    if ( this._isInstant ) {
+      this._noTransition( hide );
+    } else {
+      hide();
+    }
+
+    this.filteredItems = matches;
+  };
+
+  // change current page of isotope
+  Isotope.prototype.page = function( pageNum ) {
+    this._currentPage = Math.max( 1, Math.min( pageNum, this.totalPage() ) );
+    this.arrange();
+  };
+
+  // go to next page
+  Isotope.prototype.nextPage = function() {
+    this.page( this._currentPage + 1 );
+  };
+
+  // go to previous page
+  Isotope.prototype.previousPage = function() {
+    this.page( this._currentPage - 1 );
+  };
+
+  // get total pages
+  Isotope.prototype.totalPage = function() {
+    return Math.floor( this.items.length / this.options.perPageItems ) + 1;
+  };
+
+  // go to last page
+  Isotope.prototype.lastPage = function() {
+    this.page( this.totalPage() );
+  };
+
+  // go to first page
+  Isotope.prototype.firstPage = function() {
+    this.page( 1 );
+  };
+
+  // get current page number
+  Isotope.prototype.currentPage = function() {
+    return this._currentPage;
+  };
+
   // -------------------------- filter -------------------------- //
 
   proto._filter = function( items ) {
@@ -254,7 +329,7 @@ var trim = String.prototype.trim ?
       // item.isFilterMatched = isMatched;
       // add to matches if its a match
       if ( isMatched ) {
-        matches.push( item );
+          matches.push( item );
       }
       // add to additional group if item needs to be hidden or revealed
       if ( isMatched && item.isHidden ) {
