@@ -278,6 +278,8 @@ var getText = docElem.textContent ?
     }
 
     this.filteredItems = matches;
+
+    this.dispatchEvent( 'paginationUpdate', null, [ this._currentPage, this.totalPage(), this.filteredItems ]);
   };
 
   // change current page of isotope
