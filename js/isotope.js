@@ -94,7 +94,8 @@ var getText = docElem.textContent ?
     isJQueryFiltering: true,
     sortAscending: true,
     pagination: false,
-    perPageItems: 20
+    perPageItems: 20,
+    page:1
   });
 
   Isotope.Item = Item;
@@ -107,8 +108,7 @@ var getText = docElem.textContent ?
     this._getSorters();
     // call super
     Outlayer.prototype._create.call( this );
-    // current page
-    this._currentPage = 1;
+
     // create layout modes
     this.modes = {};
     // start filteredItems with all items
@@ -256,10 +256,11 @@ var getText = docElem.textContent ?
     // move to fist page if filter changed
     if ( this._lastFilter !== this.options.filter ) {
       this._lastFilter = this.options.filter;
-      this._currentPage = 1;
+      this.options.page = 1;
     }
 
-    var startItemInPage = ( this._currentPage - 1 ) * this.options.perPageItems,
+    var page = this.options.page,
+        startItemInPage = ( page - 1 ) * this.options.perPageItems,
         endItemInPage = startItemInPage + this.options.perPageItems,
         result = this.filteredItems,
         matches = result.slice( startItemInPage, endItemInPage ),
@@ -277,35 +278,38 @@ var getText = docElem.textContent ?
       hide();
     }
 
-    this.filteredItems = matches;
+    var totalPages = Math.floor( this.filteredItems.length / this.options.perPageItems ) + 1,
+        pageChanged = this._lastPage !== page || this._totalPages !== totalPages;
 
-    this.dispatchEvent( 'paginationUpdate', null, [ this._currentPage, this.totalPage(), this.filteredItems ]);
+    this._lastPage = page;
+    this._totalPages = totalPages;
+
+    if ( pageChanged ) {
+      this.dispatchEvent( 'paginationUpdate', null, [ page, totalPages, this.filteredItems ]);
+    }
+
+    this.filteredItems = matches;
   };
 
   // change current page of isotope
   Isotope.prototype.page = function( pageNum ) {
-    this._currentPage = Math.max( 1, Math.min( pageNum, this.totalPage() ) );
+    this.options.page = Math.max( 1, Math.min( pageNum, this.totalPages() ) );
     this.arrange();
   };
 
   // go to next page
   Isotope.prototype.nextPage = function() {
-    this.page( this._currentPage + 1 );
+    this.page( this.options.page + 1 );
   };
 
   // go to previous page
   Isotope.prototype.previousPage = function() {
-    this.page( this._currentPage - 1 );
-  };
-
-  // get total pages
-  Isotope.prototype.totalPage = function() {
-    return Math.floor( this.items.length / this.options.perPageItems ) + 1;
+    this.page( this.options.page - 1 );
   };
 
   // go to last page
   Isotope.prototype.lastPage = function() {
-    this.page( this.totalPage() );
+    this.page( this.totalPages() );
   };
 
   // go to first page
@@ -313,9 +317,14 @@ var getText = docElem.textContent ?
     this.page( 1 );
   };
 
-  // get current page number
+  // get total pages
+  Isotope.prototype.totalPages = function() {
+    return this._totalPages;
+  };
+
+  // get current page
   Isotope.prototype.currentPage = function() {
-    return this._currentPage;
+    return this.options.page;
   };
 
   // -------------------------- filter -------------------------- //
