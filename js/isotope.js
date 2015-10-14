@@ -92,7 +92,10 @@ var getText = docElem.textContent ?
   var Isotope = Outlayer.create( 'isotope', {
     layoutMode: "masonry",
     isJQueryFiltering: true,
-    sortAscending: true
+    sortAscending: true,
+    pagination: false,
+    perPageItems: 20,
+    page:1
   });
 
   Isotope.Item = Item;
@@ -199,10 +202,17 @@ var getText = docElem.textContent ?
     }
 
     this._sort();
+
+    if ( this.options.pagination ) {
+
+      this._pagination();
+    }
+
     this._layout();
   };
   // alias to _init for main plugin method
   Isotope.prototype._init = Isotope.prototype.arrange;
+
 
   // HACK
   // Don't animate/transition first layout
@@ -239,6 +249,84 @@ var getText = docElem.textContent ?
     });
   };
 
+  // -------------------------- page -------------------------- //
+  
+  // private method to devide filtered items to pages
+  Isotope.prototype._pagination = function() {
+    // move to fist page if filter changed
+    if ( this._lastFilter !== this.options.filter ) {
+      this._lastFilter = this.options.filter;
+      this.options.page = 1;
+    }
+
+    var page = this.options.page,
+        startItemInPage = ( page - 1 ) * this.options.perPageItems,
+        endItemInPage = startItemInPage + this.options.perPageItems,
+        result = this.filteredItems,
+        matches = result.slice( startItemInPage, endItemInPage ),
+        needHide = result.slice( 0, startItemInPage ).concat( result.slice( endItemInPage ) );
+
+    // hide needHide items
+    var _this = this;
+    function hide() {
+      _this.hide( needHide );
+    }
+
+    if ( this._isInstant ) {
+      this._noTransition( hide );
+    } else {
+      hide();
+    }
+
+    var totalPages = Math.floor( this.filteredItems.length / this.options.perPageItems ) + 1,
+        pageChanged = this._lastPage !== page || this._totalPages !== totalPages;
+
+    this._lastPage = page;
+    this._totalPages = totalPages;
+
+    if ( pageChanged ) {
+      this.dispatchEvent( 'paginationUpdate', null, [ page, totalPages, this.filteredItems ]);
+    }
+
+    this.filteredItems = matches;
+  };
+
+  // change current page of isotope
+  Isotope.prototype.page = function( pageNum ) {
+    this.options.page = Math.max( 1, Math.min( pageNum, this.totalPages() ) );
+    this.arrange();
+  };
+
+  // go to next page
+  Isotope.prototype.nextPage = function() {
+    this.page( this.options.page + 1 );
+  };
+
+  // go to previous page
+  Isotope.prototype.previousPage = function() {
+    this.page( this.options.page - 1 );
+  };
+
+  // go to last page
+  Isotope.prototype.lastPage = function() {
+    this.page( this.totalPages() );
+  };
+
+  // go to first page
+  Isotope.prototype.firstPage = function() {
+    this.page( 1 );
+  };
+
+  // get total pages
+  Isotope.prototype.totalPages = function() {
+    return this._totalPages;
+  };
+
+  // get current page
+  Isotope.prototype.currentPage = function() {
+    return this.options.page;
+  };
+
   // -------------------------- filter -------------------------- //
 
   Isotope.prototype._filter = function( items ) {
@@ -261,7 +349,7 @@ var getText = docElem.textContent ?
       // item.isFilterMatched = isMatched;
       // add to matches if its a match
       if ( isMatched ) {
-        matches.push( item );
+          matches.push( item );
       }
       // add to additional group if item needs to be hidden or revealed
       if ( isMatched && item.isHidden ) {
