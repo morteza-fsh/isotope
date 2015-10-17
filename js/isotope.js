@@ -278,7 +278,7 @@ var trim = String.prototype.trim ?
         needHide = items.slice( 0, startItemInPage ).concat( items.slice( endItemInPage ) ),
         hiddenInPage = [];
 
-    var totalPages = Math.floor( items.length / this.options.perPageItems ) + 1,
+    var totalPages = Math.ceil( items.length / this.options.perPageItems ),
         pageChanged = this._lastPage !== page || this._totalPages !== totalPages;
 
     this._lastPage = page;
