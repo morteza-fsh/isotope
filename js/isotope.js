@@ -161,6 +161,7 @@ var trim = String.prototype.trim ?
     // layout flow
     this._resetLayout();
     this._manageStamps();
+
     this.layoutItems( this.filteredItems, isInstant );
 
     // flag for initalized
@@ -177,23 +178,37 @@ var trim = String.prototype.trim ?
     // filter
     var filtered = this._filter( this.items );
     this.filteredItems = filtered.matches;
+    this.notPaginatedItems = this.filteredItems;
+
+    this._sort(); 
+
+    if ( this.options.pagination ) {
+      var paginationResult = this._pagination();
+      filtered.needHide = filtered.needHide.concat( paginationResult.needHide );
+      filtered.needReveal = paginationResult.needReveal;
+    }
 
     this._bindArrangeComplete();
+    this._hideRevealItems( filtered );
 
+    this._layout();
+  };
+  // alias to _init for main plugin method
+  Isotope.prototype._init = Isotope.prototype.arrange;
+
+  // hide and reveal items
+  Isotope.prototype._hideRevealItems = function( items ) {
+    var _this = this;
+    function hideReveal() {
+      _this.reveal( items.needReveal );
+      _this.hide( items.needHide );
+    }
+    
     if ( this._isInstant ) {
       this._noTransition( this._hideReveal, [ filtered ] );
     } else {
       this._hideReveal( filtered );
     }
-
-    this._sort();
-
-    if ( this.options.pagination ) {
-
-      this._pagination();
-    }
-
-    this._layout();
   };
   // alias to _init for main plugin method
   proto._init = proto.arrange;
@@ -250,42 +265,53 @@ var trim = String.prototype.trim ?
       this.options.page = 1;
     }
 
+    if ( !this.notPaginatedItems ) {
+      // make a copy from filtered items
+      this.notPaginatedItems = this.filteredItems;
+    }
+
     var page = this.options.page,
+        items = this.notPaginatedItems,
         startItemInPage = ( page - 1 ) * this.options.perPageItems,
         endItemInPage = startItemInPage + this.options.perPageItems,
-        result = this.filteredItems,
-        matches = result.slice( startItemInPage, endItemInPage ),
-        needHide = result.slice( 0, startItemInPage ).concat( result.slice( endItemInPage ) );
+        inPage = items.slice( startItemInPage, endItemInPage ),
+        needHide = items.slice( 0, startItemInPage ).concat( items.slice( endItemInPage ) ),
+        hiddenInPage = [];
 
-    // hide needHide items
-    var _this = this;
-    function hide() {
-      _this.hide( needHide );
-    }
-
-    if ( this._isInstant ) {
-      this._noTransition( hide );
-    } else {
-      hide();
-    }
-
-    var totalPages = Math.floor( this.filteredItems.length / this.options.perPageItems ) + 1,
+    var totalPages = Math.floor( items.length / this.options.perPageItems ) + 1,
         pageChanged = this._lastPage !== page || this._totalPages !== totalPages;
 
     this._lastPage = page;
     this._totalPages = totalPages;
 
     if ( pageChanged ) {
-      this.dispatchEvent( 'paginationUpdate', null, [ page, totalPages, this.filteredItems ]);
+      this.dispatchEvent( 'paginationUpdate', null, [ page, totalPages, this.inPage ]);
     }
 
-    this.filteredItems = matches;
+    // add to additional group if item needs to be hidden
+    for ( var i = 0, len = inPage.length; i !== len; i++ ) {
+      var item = inPage[i];
+      if ( item.isHidden ) {
+        hiddenInPage.push( item );
+      }
+    }
+
+    // update filtered items
+    this.filteredItems = inPage;
+
+    return {
+      matches: inPage,
+      needHide: needHide,
+      needReveal: hiddenInPage
+    }
+
   };
 
   // change current page of isotope
   Isotope.prototype.page = function( pageNum ) {
     this.options.page = Math.max( 1, Math.min( pageNum, this.totalPages() ) );
-    this.arrange();
+    this._hideRevealItems( this._pagination() );
+    this._layout();
   };
 
   // go to next page
@@ -501,7 +527,11 @@ var trim = String.prototype.trim ?
     }
     // sort magic
     var itemSorter = getItemSorter( this.sortHistory, this.options.sortAscending );
-    this.filteredItems.sort( itemSorter );
+    if ( this.options.pagination ) {
+      this.notPaginatedItems.sort( itemSorter );
+    } else {
+      this.filteredItems.sort( itemSorter );
+    }
   };
 
   // check if sortBys is same as start of sortHistory
@@ -579,10 +609,25 @@ var trim = String.prototype.trim ?
     if ( !items.length ) {
       return;
     }
+
+    var pagination = this.options.pagination;
+
     // filter, layout, reveal new items
-    var filteredItems = this._filterRevealAdded( items );
-    // add to filteredItems
-    this.filteredItems = this.filteredItems.concat( filteredItems );
+    var filteredItems = this._filterRevealAdded( items, !pagination );
+    if ( !pagination ) {
+      // add to filteredItems
+      this.filteredItems = this.filteredItems.concat( filteredItems );
+    } else {
+      // add new items to the notPaginatedItems instead of filtered items, it will be filtered again by pagination method next.
+      this.notPaginatedItems = this.notPaginatedItems.concat( filteredItems );
+      // start new layout
+      this._resetLayout();
+      this._manageStamps();
+      var paginateResult = this._pagination();
+      this._hideRevealItems( paginateResult );
+      this.layoutItems( this.filteredItems );
+    }
+
   };
 
   // HEADS UP overwrites default Outlayer prepended
@@ -591,25 +636,40 @@ var trim = String.prototype.trim ?
     if ( !items.length ) {
       return;
     }
+
     // start new layout
     this._resetLayout();
     this._manageStamps();
+    var pagination = this.options.pagination;
+
     // filter, layout, reveal new items
-    var filteredItems = this._filterRevealAdded( items );
+    var filteredItems = this._filterRevealAdded( items, !pagination );
+
     // layout previous items
-    this.layoutItems( this.filteredItems );
-    // add to items and filteredItems
-    this.filteredItems = filteredItems.concat( this.filteredItems );
+    if ( !pagination )  { 
+      this.layoutItems( this.filteredItems );
+      // add to items and filteredItems
+      this.filteredItems = filteredItems.concat( this.filteredItems );
+    } else {
+      // add new items to the notPaginatedItems instead of filtered items, it will be filtered again by pagination method next.
+      this.notPaginatedItems = filteredItems.concat( this.notPaginatedItems );
+      var paginateResult = this._pagination(); 
+      this._hideRevealItems( paginateResult );
+      this.layoutItems( this.filteredItems );
+    }
+
     this.items = items.concat( this.items );
   };
 
   proto._filterRevealAdded = function( items ) {
     var filtered = this._filter( items );
     this.hide( filtered.needHide );
-    // reveal all new items
-    this.reveal( filtered.matches );
-    // layout new items, no transition
-    this.layoutItems( filtered.matches, true );
+    if ( reveal !== false ) {
+      // reveal all new items
+      this.reveal( filtered.matches );
+      // layout new items, no transition
+      this.layoutItems( filtered.matches, true );
+    }
     return filtered.matches;
   };
 
