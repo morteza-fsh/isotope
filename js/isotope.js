@@ -273,10 +273,8 @@ var getText = docElem.textContent ?
     var page = this.options.page,
         items = this.notPaginatedItems,
         startItemInPage = ( page - 1 ) * this.options.perPageItems,
-        endItemInPage = startItemInPage + this.options.perPageItems,
-        inPage = items.slice( startItemInPage, endItemInPage ),
-        needHide = items.slice( 0, startItemInPage ).concat( items.slice( endItemInPage ) ),
-        hiddenInPage = [];
+        endItemInPage = startItemInPage + this.options.perPageItems - 1,
+        inPage = [], needHide = [], needReveal = [];
 
     var totalPages = Math.ceil( items.length / this.options.perPageItems ),
         pageChanged = this._lastPage !== page || this._totalPages !== totalPages;
@@ -284,25 +282,30 @@ var getText = docElem.textContent ?
     this._lastPage = page;
     this._totalPages = totalPages;
 
-    if ( pageChanged ) {
-      this.dispatchEvent( 'paginationUpdate', null, [ page, totalPages, this.inPage ]);
-    }
-
-    // add to additional group if item needs to be hidden
-    for ( var i = 0, len = inPage.length; i !== len; i++ ) {
-      var item = inPage[i];
-      if ( item.isHidden ) {
-        hiddenInPage.push( item );
+    for ( var i = 0, len = items.length; i !== len; i++ ) {
+      var item = items[i];
+      // is it in page?
+      if ( i >= startItemInPage && i <= endItemInPage ) {
+        inPage.push( item );
+        if ( item.isHidden ) {
+          needReveal.push( item );
+        }
+      } else if ( !item.isHidden ) {
+        needHide.push( item );
       }
     }
-
+    
     // update filtered items
     this.filteredItems = inPage;
+
+    if ( pageChanged ) {
+      this.dispatchEvent( 'paginationUpdate', null, [ page, totalPages, inPage ] );
+    }
 
     return {
       matches: inPage,
       needHide: needHide,
-      needReveal: hiddenInPage
+      needReveal: needReveal
     }
 
   };
