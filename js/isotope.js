@@ -94,7 +94,7 @@ var getText = docElem.textContent ?
     isJQueryFiltering: true,
     sortAscending: true,
     pagination: false,
-    perPageItems: 20,
+    inPage: 20,
     page:1
   });
 
@@ -272,11 +272,11 @@ var getText = docElem.textContent ?
 
     var page = this.options.page,
         items = this.notPaginatedItems,
-        startItemInPage = ( page - 1 ) * this.options.perPageItems,
-        endItemInPage = startItemInPage + this.options.perPageItems - 1,
+        startItemInPage = ( page - 1 ) * this.options.inPage,
+        endItemInPage = startItemInPage + this.options.inPage - 1,
         inPage = [], needHide = [], needReveal = [];
 
-    var totalPages = Math.ceil( items.length / this.options.perPageItems ),
+    var totalPages = Math.ceil( items.length / this.options.inPage ),
         pageChanged = this._lastPage !== page || this._totalPages !== totalPages;
 
     this._lastPage = page;
