@@ -37,7 +37,7 @@ function Item() {
 Item.prototype = new Outlayer.Item();
 
 Item.prototype._create = function() {
-  // assign id, used for original-order sorting
+  // assign id, used for original-order sortings.
   this.id = this.layout.itemGUID++;
   Outlayer.Item.prototype._create.call( this );
   this.sortData = {};
@@ -59,6 +59,33 @@ Item.prototype.updateSortData = function() {
     var sorter = sorters[ key ];
     this.sortData[ key ] = sorter( this.element, this );
   }
+};
+
+// override reveal method
+var _setPosition = Item.prototype.setPosition;
+Item.prototype.setPosition = function() {  
+  _setPosition.apply( this, arguments );
+
+  if ( !this._lazyloadStarted && this.layout.options.lazyload ) {
+    this._lazyloadStarted = true;
+    this._lazyload();
+  }
+};
+
+Item.prototype._lazyload = function() {
+  var images = this.element.querySelectorAll('img[data-src]');
+  for ( var i = 0, len = images.length; i !== len; i++ ) {
+    var img = images[i];
+    img.setAttribute('src', img.getAttribute('data-src'));
+    img.removeAttribute('data-src');
+  }
+
+  var imagesLoadedInstance;
+  if ( this.layout.options.useImagesLoaded && window.imagesLoaded ) {
+    imagesLoadedInstance = imagesLoaded( this.element )
+  }
+
+  this.layout.dispatchEvent( 'itemLoading', null, [ this, imagesLoadedInstance ] );
 };
 
 var _destroy = Item.prototype.destroy;
