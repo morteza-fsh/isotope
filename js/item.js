@@ -62,6 +62,17 @@ proto.updateSortData = function() {
   }
 };
 
+// override reveal method
+var _setPosition = proto.setPosition;
+proto.setPosition = function() {  
+  _setPosition.apply( this, arguments );
+
+  if ( !this._lazyloadStarted && this.layout.options.lazyload ) {
+    this._lazyloadStarted = true;
+    
+  }
+};
+
 var _destroy = proto.destroy;
 proto.destroy = function() {
   // call super
