@@ -37,7 +37,7 @@ function Item() {
 Item.prototype = new Outlayer.Item();
 
 Item.prototype._create = function() {
-  // assign id, used for original-order sorting
+  // assign id, used for original-order sortings.
   this.id = this.layout.itemGUID++;
   Outlayer.Item.prototype._create.call( this );
   this.sortData = {};
@@ -60,6 +60,18 @@ Item.prototype.updateSortData = function() {
     this.sortData[ key ] = sorter( this.element, this );
   }
 };
+
+// override reveal method
+var _setPosition = Item.prototype.setPosition;
+Item.prototype.setPosition = function() {  
+  _setPosition.apply( this, arguments );
+
+  if ( !this._lazyloadStarted && this.layout.options.lazyload ) {
+    this._lazyloadStarted = true;
+    
+  }
+};
+
 
 var _destroy = Item.prototype.destroy;
 Item.prototype.destroy = function() {
