@@ -86,7 +86,9 @@ var trim = String.prototype.trim ?
     sortAscending: true,
     pagination: false,
     inPage: 20,
-    page:1
+    page:1,
+    useImagesLoaded: true,
+    lazyload:false
   });
 
   Isotope.Item = Item;
