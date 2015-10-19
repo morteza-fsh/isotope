@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width" />
+
+  <title>insert-pagination-lazyload</title>
+
+  <link rel="stylesheet" href="sandbox.css" />
+  <style>
+  #container { width: 100%; }
+    .item > img { width: 100%; height: 100%}
+    .item { margin-bottom: 5px; background: transparent; }
+  </style>
+</head>
+<body>
+
+<h1>insert</h1>
+
+<p>
+  <button id="prepend">Prepend</button>
+  <button id="insert">Insert</button>
+  <button id="append">Append</button>
+</p>
+<div id="options">
+  <h2>Pagination</h2>
+  <div class="option-set" data-isotope-key="page" id="paginationControl">
+  </div>
+</div>
+
+
+<div id="container">
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.1.8/imagesloaded.pkgd.min.js"></script>
+<script src="../bower_components/eventEmitter/EventEmitter.js"></script>
+<script src="../bower_components/eventie/eventie.js"></script>
+<script src="../bower_components/doc-ready/doc-ready.js"></script>
+<script src="../bower_components/get-style-property/get-style-property.js"></script>
+<script src="../bower_components/get-size/get-size.js"></script>
+<script src="../bower_components/jquery-bridget/jquery.bridget.js"></script>
+<script src="../bower_components/matches-selector/matches-selector.js"></script>
+<script src="../bower_components/fizzy-ui-utils/utils.js"></script>
+<script src="../bower_components/outlayer/item.js"></script>
+<script src="../bower_components/outlayer/outlayer.js"></script>
+<script src="../bower_components/masonry/masonry.js"></script>
+
+<script src="../js/item.js"></script>
+<script src="../js/layout-mode.js"></script>
+<script src="../js/isotope.js"></script>
+<script src="../js/layout-modes/fit-rows.js"></script>
+<script src="../js/layout-modes/justify-rows.js"></script>
+
+<script>
+var iso;
+docReady( function() {
+
+  var container = document.querySelector('#container');
+  iso = new Isotope( container, {
+   layoutMode: 'justifyRows',
+   justifyRows: { 
+    maxWidth: 250,
+    gutter: 5
+   },
+    transitionDuration: '0.8s',
+    pagination: true,
+    inPage: 20,
+    lazyload:true,
+    useImagesLoaded: true,
+    isInitLayout: false
+  });
+
+  eventie.bind( document.querySelector('#prepend'), 'click', function() {
+    // prepend 3 new items
+    iso.prepended( [ prependItem(), prependItem(), prependItem() ] );
+  });
+
+  eventie.bind( document.querySelector('#insert'), 'click', function() {
+    // insert 3 new items
+    iso.insert( [ getItem(), getItem(), getItem() ] );
+  });
+
+  eventie.bind( document.querySelector('#append'), 'click', function() {
+    // append 3 new items
+    iso.appended( [ appendItem(), appendItem(), appendItem() ] );
+  });
+
+
+  function getItem() {
+    var item = document.createElement('div');
+    var img = new Image();
+    var height = Math.round( 300 + Math.random() * 300 );
+    var width = Math.round( 300 + Math.random() * 300 );
+    var rando = Math.ceil( Math.random() * 1000 );
+    img.setAttribute( 'data-src', 'http://lorempixel.com/' + width + '/' + height + '/' + '?' + rando );
+    item.setAttribute( 'data-width', width );
+    item.setAttribute( 'data-height', height );
+    item.className = 'item';
+    item.appendChild( img );
+    return item;
+  }
+
+  function prependItem() {
+    var item = getItem();
+    container.insertBefore( item, container.firstChild );
+    return item;
+  }
+
+  function appendItem() {
+    var item = getItem();
+    container.appendChild( item );
+    return item;
+  }
+
+   var options = document.querySelector('#options');
+  eventie.bind( options, 'click', function( event ) {
+    if ( !matchesSelector( event.target, 'button' ) ) {
+      return;
+    }
+
+    // var opt = {};
+    var key = event.target.parentNode.getAttribute('data-isotope-key');
+    var value = event.target.getAttribute('data-isotope-value');
+
+    if ( key === 'filter' && value === 'number-greater-than-50' ) {
+      value = function( elem ) {
+        var numberText = getText( elem.querySelector('.number') );
+        return parseInt( numberText, 10 ) > 40;
+      };
+    }
+    // console.log( key, value );
+    iso.options[ key ] = value;
+    iso.arrange();
+  });
+
+  var paginationControl = document.getElementById('paginationControl');
+  iso.on( 'paginationUpdate', function( currentPage, totalPage, items ) {
+    paginationControl.innerText = '';
+    paginationControl.textContent = '';
+    var pageBtn;
+    for ( var i = 0; i !== totalPage; i++ ) {
+      pageBtn = document.createElement('button');
+      pageBtn.innerText = i + 1;
+      pageBtn.textContent = i + 1;
+      pageBtn.setAttribute('data-isotope-value', i + 1);
+      paginationControl.appendChild(pageBtn);
+    }
+  });
+
+  iso.on( 'itemLoading', function( item, imagesloaded ) {
+    imagesloaded.on('always', function() { 
+      iso.arrange();
+    });
+  });
+
+  iso.arrange();
+
+});
+
+var docElem = document.documentElement;
+
+var getText = docElem.textContent ?
+  function( elem ) {
+    return elem.textContent;
+  } :
+  function( elem ) {
+    return elem.innerText;
+  };
+
+</script>
+
+</body>
+</html>
