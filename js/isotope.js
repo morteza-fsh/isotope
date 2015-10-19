@@ -170,6 +170,13 @@ var trim = String.prototype.trim ?
     this._isLayoutInited = true;
   };
 
+  //override layoutItems method
+  var _layoutItems = Isotope.prototype.layoutItems;
+  Isotope.prototype.layoutItems = function( items, isInstant ) {
+    this._beforeLayout( items, isInstant );
+    _layoutItems.apply( this, arguments );
+  };
+
   // filter + sort + layout
   proto.arrange = function( opts ) {
     // set any options pass
@@ -590,6 +597,13 @@ var trim = String.prototype.trim ?
     Outlayer.prototype._resetLayout.call( this );
     this._mode()._resetLayout();
   };
+  
+  Isotope.prototype._beforeLayout = function ( items, isInstant ) {
+    var mode = this._mode();
+    if ( mode._beforeLayout ) {
+      mode._beforeLayout( items, isInstant );
+    }
+  };  
 
   proto._getItemLayoutPosition = function( item ) {
     return this._mode()._getItemLayoutPosition( item );
