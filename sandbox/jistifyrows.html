@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>fitRows</title>
+
+  <link rel="stylesheet" href="sandbox.css" />
+
+  <style>
+    #gutter2 .gutter-sizer { width: 30px; }
+    .container { width: 100%; }
+    .item > img { width: 100%; height: 100%}
+    .item { margin-bottom: 5px;}
+  </style>
+
+</head>
+<body>
+
+  <h1>fitRows</h1>
+
+  <div id="basic" class="container">
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.1.8/imagesloaded.pkgd.min.js"></script>
+<script src="../bower_components/eventEmitter/EventEmitter.js"></script>
+<script src="../bower_components/eventie/eventie.js"></script>
+<script src="../bower_components/doc-ready/doc-ready.js"></script>
+<script src="../bower_components/get-style-property/get-style-property.js"></script>
+<script src="../bower_components/get-size/get-size.js"></script>
+<script src="../bower_components/jquery-bridget/jquery.bridget.js"></script>
+<script src="../bower_components/matches-selector/matches-selector.js"></script>
+<script src="../bower_components/fizzy-ui-utils/utils.js"></script>
+<script src="../bower_components/outlayer/item.js"></script>
+<script src="../bower_components/outlayer/outlayer.js"></script>
+
+<script src="../js/layout-mode.js"></script>
+<script src="../js/item.js"></script>
+<script src="../js/isotope.js"></script>
+<script src="../js/layout-modes/justify-rows.js"></script>
+
+<script>
+docReady( function() {
+
+  var container = document.querySelector('#basic');
+  // generate markup
+  for ( var i = 0; i !== 40; i++ ) {
+    var item = document.createElement('div');
+    var img = new Image();
+    var height = Math.round( 300 + Math.random() * 300 );
+    var width = Math.round( 300 + Math.random() * 300 );
+    var rando = Math.ceil( Math.random() * 1000 );
+    img.setAttribute( 'data-src', 'http://lorempixel.com/' + width + '/' + height + '/' + '?' + rando );
+    item.setAttribute( 'data-width', width );
+    item.setAttribute( 'data-height', height );
+    item.className = 'item';
+    item.appendChild( img );
+    container.appendChild( item );
+  }
+
+  var iso = window.iso = new Isotope( container, {
+    layoutMode: 'justifyRows',
+    lazyload:true,
+    useImagesLoaded: true,
+    isInitLayout: false,
+    justifyRows: {
+      maxHeight: 300,
+      gutter: 5
+    }
+  });
+
+
+  iso.on( 'itemLoading', function( item, imagesloaded ) {
+    imagesloaded.on('always', function() { 
+      iso.arrange();
+    });
+  });
+
+  iso.arrange();
+});
+</script>
+
+</body>
+</html>
