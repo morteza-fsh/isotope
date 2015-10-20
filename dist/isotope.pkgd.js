@@ -1,5 +1,9 @@
 /*!
+<<<<<<< HEAD
  * Isotope PACKAGED v3.0.6
+=======
+ * Isotope PACKAGED v2.4.0
+>>>>>>> new build and updated version to 2.4.0
  *
  * Licensed GPLv3 for open source use
  * or Isotope Commercial License for commercial use
@@ -174,7 +178,59 @@ return jQueryBridget;
     global.EvEmitter = factory();
   }
 
+<<<<<<< HEAD
 }( typeof window != 'undefined' ? window : this, function() {
+=======
+    /**
+     * Alias of removeEvent.
+     *
+     * Added to mirror the node API.
+     */
+    proto.removeAllListeners = alias('removeEvent');
+
+    /**
+     * Emits an event of your choice.
+     * When emitted, every listener attached to that event will be executed.
+     * If you pass the optional argument array then those arguments will be passed to every listener upon execution.
+     * Because it uses `apply`, your array of arguments will be passed as if you wrote them out separately.
+     * So they will not arrive within the array on the other side, they will be separate.
+     * You can also pass a regular expression to emit to all events that match it.
+     *
+     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
+     * @param {Array} [args] Optional array of arguments to be passed to each listener.
+     * @return {Object} Current instance of EventEmitter for chaining.
+     */
+    proto.emitEvent = function emitEvent(evt, args) {
+        var listenersMap = this.getListenersAsObject(evt);
+        var listeners;
+        var listener;
+        var i;
+        var key;
+        var response;
+
+        for (key in listenersMap) {
+            if (listenersMap.hasOwnProperty(key)) {
+                listeners = listenersMap[key].slice(0);
+                i = listeners.length;
+
+                while (i--) {
+                    // If the listener returns true then it shall be removed from the event
+                    // The function is executed either with a basic call or an apply if there is an args array
+                    listener = listeners[i];
+
+                    if (listener.once === true) {
+                        this.removeListener(evt, listener.listener);
+                    }
+
+                    response = listener.listener.apply(this, args || []);
+
+                    if (response === this._getOnceReturnValue()) {
+                        this.removeListener(evt, listener.listener);
+                    }
+                }
+            }
+        }
+>>>>>>> new build and updated version to 2.4.0
 
 
 
@@ -2302,9 +2358,14 @@ function Item() {
 
 var proto = Item.prototype = Object.create( Outlayer.Item.prototype );
 
+<<<<<<< HEAD
 var _create = proto._create;
 proto._create = function() {
   // assign id, used for original-order sorting
+=======
+Item.prototype._create = function() {
+  // assign id, used for original-order sortings.
+>>>>>>> new build and updated version to 2.4.0
   this.id = this.layout.itemGUID++;
   _create.call( this );
   this.sortData = {};
@@ -2328,8 +2389,40 @@ proto.updateSortData = function() {
   }
 };
 
+<<<<<<< HEAD
 var _destroy = proto.destroy;
 proto.destroy = function() {
+=======
+// override reveal method
+var _setPosition = Item.prototype.setPosition;
+Item.prototype.setPosition = function() {  
+  _setPosition.apply( this, arguments );
+
+  if ( !this._lazyloadStarted && this.layout.options.lazyload ) {
+    this._lazyloadStarted = true;
+    this._lazyload();
+  }
+};
+
+Item.prototype._lazyload = function() {
+  var images = this.element.querySelectorAll('img[data-src]');
+  for ( var i = 0, len = images.length; i !== len; i++ ) {
+    var img = images[i];
+    img.setAttribute('src', img.getAttribute('data-src'));
+    img.removeAttribute('data-src');
+  }
+
+  var imagesLoadedInstance;
+  if ( this.layout.options.useImagesLoaded && window.imagesLoaded ) {
+    imagesLoadedInstance = window.imagesLoaded( this.element );
+  }
+
+  this.layout.dispatchEvent( 'itemLoading', null, [ this, imagesLoadedInstance ] );
+};
+
+var _destroy = Item.prototype.destroy;
+Item.prototype.destroy = function() {
+>>>>>>> new build and updated version to 2.4.0
   // call super
   _destroy.apply( this, arguments );
   // reset display, #741
@@ -2501,7 +2594,11 @@ return Item;
 }));
 
 /*!
+<<<<<<< HEAD
  * Masonry v4.2.1
+=======
+ * Masonry v3.3.2
+>>>>>>> new build and updated version to 2.4.0
  * Cascading grid layout library
  * https://masonry.desandro.com
  * MIT License
@@ -2584,6 +2681,7 @@ return Item;
     var mathMethod = excess && excess < 1 ? 'round' : 'floor';
     cols = Math[ mathMethod ]( cols );
     this.cols = Math.max( cols, 1 );
+
   };
 
   proto.getContainerWidth = function() {
@@ -2604,10 +2702,18 @@ return Item;
     // round if off by 1 pixel, otherwise use ceil
     var colSpan = Math[ mathMethod ]( item.size.outerWidth / this.columnWidth );
     colSpan = Math.min( colSpan, this.cols );
+<<<<<<< HEAD
     // use horizontal or top column position
     var colPosMethod = this.options.horizontalOrder ?
       '_getHorizontalColPosition' : '_getTopColPosition';
     var colPosition = this[ colPosMethod ]( colSpan, item );
+=======
+
+    var colGroup = this._getColGroup( colSpan );
+    // get the minimum Y value from the columns
+    var minimumY = Math.min.apply( Math, colGroup );
+    var shortColIndex = utils.indexOf( colGroup, minimumY );
+>>>>>>> new build and updated version to 2.4.0
     // position the brick
     var position = {
       x: this.columnWidth * colPosition.col,
@@ -2940,7 +3046,11 @@ return Vertical;
 }));
 
 /*!
+<<<<<<< HEAD
  * Isotope v3.0.6
+=======
+ * Isotope v2.4.0
+>>>>>>> new build and updated version to 2.4.0
  *
  * Licensed GPLv3 for open source use
  * or Isotope Commercial License for commercial use
@@ -3022,7 +3132,12 @@ var trim = String.prototype.trim ?
   var Isotope = Outlayer.create( 'isotope', {
     layoutMode: 'masonry',
     isJQueryFiltering: true,
-    sortAscending: true
+    sortAscending: true,
+    pagination: false,
+    inPage: 20,
+    page:1,
+    useImagesLoaded: true,
+    lazyload:false
   });
 
   Isotope.Item = Item;
@@ -3099,10 +3214,18 @@ var trim = String.prototype.trim ?
     // layout flow
     this._resetLayout();
     this._manageStamps();
+
     this.layoutItems( this.filteredItems, isInstant );
 
     // flag for initalized
     this._isLayoutInited = true;
+  };
+
+  //override layoutItems method
+  var _layoutItems = Isotope.prototype.layoutItems;
+  Isotope.prototype.layoutItems = function( items, isInstant ) {
+    this._beforeLayout( items, isInstant );
+    _layoutItems.apply( this, arguments );
   };
 
   // filter + sort + layout
@@ -3115,18 +3238,42 @@ var trim = String.prototype.trim ?
     // filter
     var filtered = this._filter( this.items );
     this.filteredItems = filtered.matches;
+    this.notPaginatedItems = this.filteredItems;
 
+<<<<<<< HEAD
+=======
+    this._sort(); 
+
+    if ( this.options.pagination ) {
+      var paginationResult = this._pagination();
+      filtered.needHide = filtered.needHide.concat( paginationResult.needHide );
+      filtered.needReveal = paginationResult.needReveal;
+    }
+
+>>>>>>> new build and updated version to 2.4.0
     this._bindArrangeComplete();
+    this._hideRevealItems( filtered );
 
+    this._layout();
+  };
+  // alias to _init for main plugin method
+  Isotope.prototype._init = Isotope.prototype.arrange;
+
+  // hide and reveal items
+  Isotope.prototype._hideRevealItems = function( items ) {
+    var _this = this;
+    function hideReveal() {
+      _this.reveal( items.needReveal );
+      _this.hide( items.needHide );
+    }
+    
     if ( this._isInstant ) {
       this._noTransition( this._hideReveal, [ filtered ] );
     } else {
       this._hideReveal( filtered );
     }
-
-    this._sort();
-    this._layout();
   };
+<<<<<<< HEAD
   // alias to _init for main plugin method
   proto._init = proto.arrange;
 
@@ -3134,6 +3281,8 @@ var trim = String.prototype.trim ?
     this.reveal( filtered.needReveal );
     this.hide( filtered.needHide );
   };
+=======
+>>>>>>> new build and updated version to 2.4.0
 
   // HACK
   // Don't animate/transition first layout
@@ -3171,6 +3320,98 @@ var trim = String.prototype.trim ?
     });
   };
 
+  // -------------------------- page -------------------------- //
+  
+  // private method to devide filtered items to pages
+  Isotope.prototype._pagination = function() {
+    // move to fist page if filter changed
+    if ( this._lastFilter !== this.options.filter ) {
+      this._lastFilter = this.options.filter;
+      this.options.page = 1;
+    }
+
+    if ( !this.notPaginatedItems ) {
+      // make a copy from filtered items
+      this.notPaginatedItems = this.filteredItems;
+    }
+
+    var page = this.options.page,
+        items = this.notPaginatedItems,
+        startItemInPage = ( page - 1 ) * this.options.inPage,
+        endItemInPage = startItemInPage + this.options.inPage - 1,
+        inPage = [], needHide = [], needReveal = [];
+
+    var totalPages = Math.ceil( items.length / this.options.inPage ),
+        pageChanged = this._lastPage !== page || this._totalPages !== totalPages;
+
+    this._lastPage = page;
+    this._totalPages = totalPages;
+
+    for ( var i = 0, len = items.length; i !== len; i++ ) {
+      var item = items[i];
+      // is it in page?
+      if ( i >= startItemInPage && i <= endItemInPage ) {
+        inPage.push( item );
+        if ( item.isHidden ) {
+          needReveal.push( item );
+        }
+      } else if ( !item.isHidden ) {
+        needHide.push( item );
+      }
+    }
+    
+    // update filtered items
+    this.filteredItems = inPage;
+
+    if ( pageChanged ) {
+      this.dispatchEvent( 'paginationUpdate', null, [ page, totalPages, inPage ] );
+    }
+
+    return {
+      matches: inPage,
+      needHide: needHide,
+      needReveal: needReveal
+    };
+
+  };
+
+  // change current page of isotope
+  Isotope.prototype.page = function( pageNum ) {
+    this.options.page = Math.max( 1, Math.min( pageNum, this.totalPages() ) );
+    this._hideRevealItems( this._pagination() );
+    this._layout();
+  };
+
+  // go to next page
+  Isotope.prototype.nextPage = function() {
+    this.page( this.options.page + 1 );
+  };
+
+  // go to previous page
+  Isotope.prototype.previousPage = function() {
+    this.page( this.options.page - 1 );
+  };
+
+  // go to last page
+  Isotope.prototype.lastPage = function() {
+    this.page( this.totalPages() );
+  };
+
+  // go to first page
+  Isotope.prototype.firstPage = function() {
+    this.page( 1 );
+  };
+
+  // get total pages
+  Isotope.prototype.totalPages = function() {
+    return this._totalPages;
+  };
+
+  // get current page
+  Isotope.prototype.currentPage = function() {
+    return this.options.page;
+  };
+
   // -------------------------- filter -------------------------- //
 
   proto._filter = function( items ) {
@@ -3193,7 +3434,7 @@ var trim = String.prototype.trim ?
       // item.isFilterMatched = isMatched;
       // add to matches if its a match
       if ( isMatched ) {
-        matches.push( item );
+          matches.push( item );
       }
       // add to additional group if item needs to be hidden or revealed
       if ( isMatched && item.isHidden ) {
@@ -3353,6 +3594,7 @@ var trim = String.prototype.trim ?
       this.sortHistory = sortBys.concat( this.sortHistory );
     }
     // sort magic
+<<<<<<< HEAD
     var itemSorter = getItemSorter( this.sortHistory, this.options.sortAscending );
     this.filteredItems.sort( itemSorter );
   };
@@ -3363,6 +3605,20 @@ var trim = String.prototype.trim ?
       if ( sortBys[i] != this.sortHistory[i] ) {
         return false;
       }
+=======
+    var itemSorter = getItemSorter( sortBys, this.options.sortAscending );
+    
+    if ( this.options.pagination ) {
+      this.notPaginatedItems.sort( itemSorter );
+    } else {
+      this.filteredItems.sort( itemSorter );
+    }
+
+    // keep track of sortBy History
+    if ( sortByOpt != this.sortHistory[0] ) {
+      // add to front, oldest goes in last
+      this.sortHistory.unshift( sortByOpt );
+>>>>>>> new build and updated version to 2.4.0
     }
     return true;
   };
@@ -3407,6 +3663,13 @@ var trim = String.prototype.trim ?
     Outlayer.prototype._resetLayout.call( this );
     this._mode()._resetLayout();
   };
+  
+  Isotope.prototype._beforeLayout = function ( items, isInstant ) {
+    var mode = this._mode();
+    if ( mode._beforeLayout ) {
+      mode._beforeLayout( items, isInstant );
+    }
+  };  
 
   proto._getItemLayoutPosition = function( item  ) {
     return this._mode()._getItemLayoutPosition( item );
@@ -3432,10 +3695,25 @@ var trim = String.prototype.trim ?
     if ( !items.length ) {
       return;
     }
+
+    var pagination = this.options.pagination;
+
     // filter, layout, reveal new items
-    var filteredItems = this._filterRevealAdded( items );
-    // add to filteredItems
-    this.filteredItems = this.filteredItems.concat( filteredItems );
+    var filteredItems = this._filterRevealAdded( items, !pagination );
+    if ( !pagination ) {
+      // add to filteredItems
+      this.filteredItems = this.filteredItems.concat( filteredItems );
+    } else {
+      // add new items to the notPaginatedItems instead of filtered items, it will be filtered again by pagination method next.
+      this.notPaginatedItems = this.notPaginatedItems.concat( filteredItems );
+      // start new layout
+      this._resetLayout();
+      this._manageStamps();
+      var paginateResult = this._pagination();
+      this._hideRevealItems( paginateResult );
+      this.layoutItems( this.filteredItems );
+    }
+
   };
 
   // HEADS UP overwrites default Outlayer prepended
@@ -3444,25 +3722,44 @@ var trim = String.prototype.trim ?
     if ( !items.length ) {
       return;
     }
+
     // start new layout
     this._resetLayout();
     this._manageStamps();
+    var pagination = this.options.pagination;
+
     // filter, layout, reveal new items
-    var filteredItems = this._filterRevealAdded( items );
+    var filteredItems = this._filterRevealAdded( items, !pagination );
+
     // layout previous items
-    this.layoutItems( this.filteredItems );
-    // add to items and filteredItems
-    this.filteredItems = filteredItems.concat( this.filteredItems );
+    if ( !pagination )  { 
+      this.layoutItems( this.filteredItems );
+      // add to items and filteredItems
+      this.filteredItems = filteredItems.concat( this.filteredItems );
+    } else {
+      // add new items to the notPaginatedItems instead of filtered items, it will be filtered again by pagination method next.
+      this.notPaginatedItems = filteredItems.concat( this.notPaginatedItems );
+      var paginateResult = this._pagination(); 
+      this._hideRevealItems( paginateResult );
+      this.layoutItems( this.filteredItems );
+    }
+
     this.items = items.concat( this.items );
   };
 
+<<<<<<< HEAD
   proto._filterRevealAdded = function( items ) {
+=======
+  Isotope.prototype._filterRevealAdded = function( items, reveal ) {
+>>>>>>> new build and updated version to 2.4.0
     var filtered = this._filter( items );
     this.hide( filtered.needHide );
-    // reveal all new items
-    this.reveal( filtered.matches );
-    // layout new items, no transition
-    this.layoutItems( filtered.matches, true );
+    if ( reveal !== false ) {
+      // reveal all new items
+      this.reveal( filtered.matches );
+      // layout new items, no transition
+      this.layoutItems( filtered.matches, true );
+    }
     return filtered.matches;
   };
 
