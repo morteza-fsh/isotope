@@ -82,7 +82,7 @@ proto._lazyload = function() {
 
   var imagesLoadedInstance;
   if ( this.layout.options.useImagesLoaded && window.imagesLoaded ) {
-    imagesLoadedInstance = imagesLoaded( this.element )
+    imagesLoadedInstance = window.imagesLoaded( this.element );
   }
 
   this.layout.dispatchEvent( 'itemLoading', null, [ this, imagesLoadedInstance ] );
