@@ -40,8 +40,8 @@ JustifyRows.prototype._getRowHeight = function( rowItems, containerWidth ) {
   var totalHeight = 0;
   for ( var i = 0, len = rowItems.length; i !== len; i++ ) {
     var itemEle = rowItems[i].element,
-        w = parseInt( itemEle.getAttribute( 'data-width' ) ) || rowItems[i].size.outerWidth,
-        h = parseInt( itemEle.getAttribute( 'data-height' ) ) || rowItems[i].size.outerHeight;
+        w = parseInt( itemEle.getAttribute( 'data-width' ), 10 ) || rowItems[i].size.outerWidth,
+        h = parseInt( itemEle.getAttribute( 'data-height' ), 10 ) || rowItems[i].size.outerHeight;
 
     totalHeight += w / h;
   }
@@ -52,24 +52,26 @@ JustifyRows.prototype._getRowHeight = function( rowItems, containerWidth ) {
 JustifyRows.prototype._resizeItems = function( rowItems, rowHeight ) {
   for ( var i = 0, len = rowItems.length; i !== len; i++ ) {
     var itemEle = rowItems[i].element,
-        w = parseInt( itemEle.getAttribute( 'data-width' ) ) || rowItems[i].size.outerWidth,
-        h = parseInt( itemEle.getAttribute( 'data-height' ) ) || rowItems[i].size.outerHeight;
+        w = parseInt( itemEle.getAttribute( 'data-width' ), 10 ) || rowItems[i].size.outerWidth,
+        h = parseInt( itemEle.getAttribute( 'data-height' ), 10 ) || rowItems[i].size.outerHeight;
 
     itemEle.style.width = rowHeight * w / h + 'px';
     itemEle.style.height = rowHeight + 'px';
   }
 };
 
-JustifyRows.prototype._beforeLayout = function( items, isInstant ) {
+JustifyRows.prototype._beforeLayout = function() {
   var maxHeight = this.options.maxHeight || 200,
       containerWidth = this.isotope.size.innerWidth + this.gutter;
 
-  var checkItems = this.isotope.filteredItems.slice( 0 );
+  var checkItems = this.isotope.filteredItems.slice( 0 ),
+      row, rowHeight;
   
   newRow: while ( checkItems.length > 0 ) {
+    
     for ( var i = 0, len = checkItems.length; i !== len; i++ ) {
-      var row = checkItems.slice( 0, i + 1 ),
-          rowHeight = this._getRowHeight( row, containerWidth );
+      row = checkItems.slice( 0, i + 1 ),
+      rowHeight = this._getRowHeight( row, containerWidth );
 
       if ( rowHeight < maxHeight ) {
         this._resizeItems( row, rowHeight );

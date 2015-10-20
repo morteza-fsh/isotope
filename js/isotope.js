@@ -315,7 +315,7 @@ var getText = docElem.textContent ?
       matches: inPage,
       needHide: needHide,
       needReveal: needReveal
-    }
+    };
 
   };
 
