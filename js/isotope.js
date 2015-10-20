@@ -315,7 +315,7 @@ var trim = String.prototype.trim ?
       matches: inPage,
       needHide: needHide,
       needReveal: needReveal
-    }
+    };
 
   };
 
