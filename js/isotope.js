@@ -97,7 +97,8 @@ var getText = docElem.textContent ?
     inPage: 20,
     page:1,
     useImagesLoaded: true,
-    lazyload:false
+    lazyload:false,
+    resizeTransition: true
   });
 
   Isotope.Item = Item;
