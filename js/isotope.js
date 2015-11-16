@@ -97,7 +97,8 @@ var getText = docElem.textContent ?
     inPage: 20,
     page:1,
     useImagesLoaded: true,
-    lazyload:false
+    lazyload:false,
+    resizeTransition: true
   });
 
   Isotope.Item = Item;
@@ -624,6 +625,23 @@ var getText = docElem.textContent ?
   Isotope.prototype.needsResizeLayout = function() {
     return this._mode().needsResizeLayout();
   };
+
+  // override resize method from outlayer
+  Isotope.prototype.resize = function() {
+    // don't trigger if size did not change
+    // or if resize was unbound. See #9
+    if ( !this.isResizeBound || !this.needsResizeLayout() ) {
+      return;
+    }
+
+    // disable transition effect on page resize
+    if ( !this.options.resizeTransition ) {
+      this._noTransition( this.layout );
+    } else {
+      this.layout();
+    }
+
+  }
 
   // -------------------------- adding & removing -------------------------- //
 
