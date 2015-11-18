@@ -646,7 +646,7 @@ var trim = String.prototype.trim ?
       this.layout();
     }
 
-  }
+  };
 
   // -------------------------- adding & removing -------------------------- //
 
