@@ -3754,7 +3754,8 @@ var getText = docElem.textContent ?
     inPage: 20,
     page:1,
     useImagesLoaded: true,
-    lazyload:false
+    lazyload:false,
+    resizeTransition: true
   });
 
   Isotope.Item = Item;
@@ -3867,6 +3868,14 @@ var getText = docElem.textContent ?
     this._hideRevealItems( filtered );
 
     this._layout();
+
+    // reset isLayoutInstant
+    if ( this.options.pagination ) {
+      for ( var i = 0, l = this.filteredItems.length; i !== l; i++ ) {
+        this.filteredItems[i].isLayoutInstant = false;
+      }
+    }
+
   };
   // alias to _init for main plugin method
   Isotope.prototype._init = Isotope.prototype.arrange;
@@ -3955,6 +3964,7 @@ var getText = docElem.textContent ?
         inPage.push( item );
         if ( item.isHidden ) {
           needReveal.push( item );
+          item.isLayoutInstant = true;
         }
       } else if ( !item.isHidden ) {
         needHide.push( item );
@@ -4271,6 +4281,23 @@ var getText = docElem.textContent ?
 
   Isotope.prototype.needsResizeLayout = function() {
     return this._mode().needsResizeLayout();
+  };
+
+  // override resize method from outlayer
+  Isotope.prototype.resize = function() {
+    // don't trigger if size did not change
+    // or if resize was unbound. See #9
+    if ( !this.isResizeBound || !this.needsResizeLayout() ) {
+      return;
+    }
+
+    // disable transition effect on page resize
+    if ( !this.options.resizeTransition ) {
+      this._noTransition( this.layout );
+    } else {
+      this.layout();
+    }
+
   };
 
   // -------------------------- adding & removing -------------------------- //

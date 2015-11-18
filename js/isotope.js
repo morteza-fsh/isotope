@@ -641,7 +641,7 @@ var getText = docElem.textContent ?
       this.layout();
     }
 
-  }
+  };
 
   // -------------------------- adding & removing -------------------------- //
 
