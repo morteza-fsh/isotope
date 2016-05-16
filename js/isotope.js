@@ -22,6 +22,7 @@
         './layout-mode',
         // include default layout modes
         './layout-modes/masonry',
+        './layout-modes/justify-rows',
         './layout-modes/fit-rows',
         './layout-modes/vertical'
       ],
@@ -41,6 +42,7 @@
       // include default layout modes
       require('./layout-modes/masonry'),
       require('./layout-modes/fit-rows'),
+      require('./layout-modes/justify-rows'),
       require('./layout-modes/vertical')
     );
   } else {
