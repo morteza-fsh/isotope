@@ -15,35 +15,36 @@
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( [
-      'outlayer/outlayer',
-      'get-size/get-size',
-      'desandro-matches-selector/matches-selector',
-      'fizzy-ui-utils/utils',
-      './item',
-      './layout-mode',
-      // include default layout modes
-      './layout-modes/masonry',
-      './layout-modes/fit-rows',
-      './layout-modes/vertical',
-    ],
-    function( Outlayer, getSize, matchesSelector, utils, Item, LayoutMode ) {
-        return factory( window, Outlayer, getSize, matchesSelector, utils,
-            Item, LayoutMode );
-      } );
+        'outlayer/outlayer',
+        'get-size/get-size',
+        'desandro-matches-selector/matches-selector',
+        'fizzy-ui-utils/utils',
+        './item',
+        './layout-mode',
+        // include default layout modes
+        './layout-modes/masonry',
+        './layout-modes/justify-rows',
+        './layout-modes/fit-rows',
+        './layout-modes/vertical'
+      ],
+      function( Outlayer, getSize, matchesSelector, utils, Item, LayoutMode ) {
+        return factory( window, Outlayer, getSize, matchesSelector, utils, Item, LayoutMode );
+      });
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
-        window,
-        require('outlayer'),
-        require('get-size'),
-        require('desandro-matches-selector'),
-        require('fizzy-ui-utils'),
-        require('./item'),
-        require('./layout-mode'),
-        // include default layout modes
-        require('./layout-modes/masonry'),
-        require('./layout-modes/fit-rows'),
-        require('./layout-modes/vertical')
+      window,
+      require('outlayer'),
+      require('get-size'),
+      require('desandro-matches-selector'),
+      require('fizzy-ui-utils'),
+      require('./item'),
+      require('./layout-mode'),
+      // include default layout modes
+      require('./layout-modes/masonry'),
+      require('./layout-modes/fit-rows'),
+      require('./layout-modes/justify-rows'),
+      require('./layout-modes/vertical')
     );
   } else {
     // browser global
