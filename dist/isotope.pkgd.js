@@ -1684,7 +1684,7 @@ Item.prototype.layoutPosition = function() {
   style[ yProperty ] = this.getYValue( y );
   // reset other property
   style[ yResetProperty ] = '';
-console.log(style);
+
   this.css( style );
   this.emitEvent( 'layout', [ this ] );
 };
