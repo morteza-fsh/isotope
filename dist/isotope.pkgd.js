@@ -2594,6 +2594,7 @@ return Item;
 }));
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*!
 <<<<<<< HEAD
  * Masonry v4.2.1
@@ -2868,6 +2869,29 @@ return Item;
     module.exports = factory(
       require('../layout-mode'),
       require('masonry-layout')
+=======
+/*!
+ * Masonry layout mode
+ * sub-classes Masonry
+ * http://masonry.desandro.com
+ */
+
+( function( window, factory ) {
+  'use strict';
+  // universal module definition
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD
+    define( 'isotope/js/layout-modes/masonry',[
+        '../layout-mode'
+        //'masonry/masonry'
+      ],
+      factory );
+  } else if ( typeof exports == 'object' ) {
+    // CommonJS
+    module.exports = factory(
+      require('../layout-mode')
+      //require('masonry-layout')
+>>>>>>> excluded masonry from the isotop masonry layout
     );
   } else {
     // browser global
@@ -2880,11 +2904,25 @@ return Item;
 }( window, function factory( LayoutMode, Masonry ) {
 'use strict';
 
+<<<<<<< HEAD
+=======
+// -------------------------- helpers -------------------------- //
+
+// extend objects
+function extend( a, b ) {
+  for ( var prop in b ) {
+    a[ prop ] = b[ prop ];
+  }
+  return a;
+}
+
+>>>>>>> excluded masonry from the isotop masonry layout
 // -------------------------- masonryDefinition -------------------------- //
 
   // create an Outlayer layout class
   var MasonryMode = LayoutMode.create('masonry');
 
+<<<<<<< HEAD
   var proto = MasonryMode.prototype;
 
   var keepModeMethods = {
@@ -2903,11 +2941,29 @@ return Item;
 
   var measureColumns = proto.measureColumns;
   proto.measureColumns = function() {
+=======
+  // save on to these methods
+  var _getElementOffset = MasonryMode.prototype._getElementOffset;
+  var layout = MasonryMode.prototype.layout;
+  var _getMeasurement = MasonryMode.prototype._getMeasurement;
+
+  // sub-class Masonry
+  extend( MasonryMode.prototype, Masonry.prototype );
+
+  // set back, as it was overwritten by Masonry
+  MasonryMode.prototype._getElementOffset = _getElementOffset;
+  MasonryMode.prototype.layout = layout;
+  MasonryMode.prototype._getMeasurement = _getMeasurement;
+
+  var measureColumns = MasonryMode.prototype.measureColumns;
+  MasonryMode.prototype.measureColumns = function() {
+>>>>>>> excluded masonry from the isotop masonry layout
     // set items, used if measuring first item
     this.items = this.isotope.filteredItems;
     measureColumns.call( this );
   };
 
+<<<<<<< HEAD
   // point to mode options for fitWidth
   var _getOption = proto._getOption;
   proto._getOption = function( option ) {
@@ -2916,14 +2972,25 @@ return Item;
         this.options.isFitWidth : this.options.fitWidth;
     }
     return _getOption.apply( this.isotope, arguments );
+=======
+  // HACK copy over isOriginLeft/Top options
+  var _manageStamp = MasonryMode.prototype._manageStamp;
+  MasonryMode.prototype._manageStamp = function() {
+    this.options.isOriginLeft = this.isotope.options.isOriginLeft;
+    this.options.isOriginTop = this.isotope.options.isOriginTop;
+    _manageStamp.apply( this, arguments );
+>>>>>>> excluded masonry from the isotop masonry layout
   };
 
   return MasonryMode;
 
 }));
 
+<<<<<<< HEAD
 =======
 >>>>>>> excluded masonry script from the package
+=======
+>>>>>>> excluded masonry from the isotop masonry layout
 /**
  * justifyRows layout mode
  */
@@ -3194,6 +3261,7 @@ return Vertical;
         // include default layout modes
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         'isotope-layout/js/layout-modes/masonry',
         'isotope-layout/js/layout-modes/fit-rows',
         'isotope-layout/js/layout-modes/vertical'
@@ -3202,6 +3270,9 @@ return Vertical;
 =======
         //'isotope/js/layout-modes/masonry', // exclude masonry from pacakge.
 >>>>>>> excluded masonry script from the package
+=======
+        'isotope/js/layout-modes/masonry',
+>>>>>>> excluded masonry from the isotop masonry layout
         'isotope/js/layout-modes/justify-rows',
         'isotope/js/layout-modes/fit-rows',
         'isotope/js/layout-modes/vertical'
@@ -3223,6 +3294,7 @@ return Vertical;
       // include default layout modes
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       require('isotope-layout/js/layout-modes/masonry'),
       require('isotope-layout/js/layout-modes/fit-rows'),
       require('isotope-layout/js/layout-modes/vertical')
@@ -3231,6 +3303,9 @@ return Vertical;
 =======
       //require('./layout-modes/masonry'), // exclude masonry from pacakge.
 >>>>>>> excluded masonry script from the package
+=======
+      require('./layout-modes/masonry'),
+>>>>>>> excluded masonry from the isotop masonry layout
       require('./layout-modes/fit-rows'),
       require('./layout-modes/justify-rows'),
       require('./layout-modes/vertical')
