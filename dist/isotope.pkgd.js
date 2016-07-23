@@ -2593,6 +2593,7 @@ return Item;
 
 }));
 
+<<<<<<< HEAD
 /*!
 <<<<<<< HEAD
  * Masonry v4.2.1
@@ -2921,6 +2922,8 @@ return Item;
 
 }));
 
+=======
+>>>>>>> excluded masonry script from the package
 /**
  * justifyRows layout mode
  */
@@ -3190,11 +3193,15 @@ return Vertical;
         'isotope-layout/js/layout-mode',
         // include default layout modes
 <<<<<<< HEAD
+<<<<<<< HEAD
         'isotope-layout/js/layout-modes/masonry',
         'isotope-layout/js/layout-modes/fit-rows',
         'isotope-layout/js/layout-modes/vertical'
 =======
         'isotope/js/layout-modes/masonry',
+=======
+        //'isotope/js/layout-modes/masonry', // exclude masonry from pacakge.
+>>>>>>> excluded masonry script from the package
         'isotope/js/layout-modes/justify-rows',
         'isotope/js/layout-modes/fit-rows',
         'isotope/js/layout-modes/vertical'
@@ -3215,11 +3222,15 @@ return Vertical;
       require('isotope-layout/js/layout-mode'),
       // include default layout modes
 <<<<<<< HEAD
+<<<<<<< HEAD
       require('isotope-layout/js/layout-modes/masonry'),
       require('isotope-layout/js/layout-modes/fit-rows'),
       require('isotope-layout/js/layout-modes/vertical')
 =======
       require('./layout-modes/masonry'),
+=======
+      //require('./layout-modes/masonry'), // exclude masonry from pacakge.
+>>>>>>> excluded masonry script from the package
       require('./layout-modes/fit-rows'),
       require('./layout-modes/justify-rows'),
       require('./layout-modes/vertical')
