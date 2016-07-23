@@ -22,7 +22,7 @@
         './item',
         './layout-mode',
         // include default layout modes
-        './layout-modes/masonry',
+        //'./layout-modes/masonry', // exclude masonry from pacakge.
         './layout-modes/justify-rows',
         './layout-modes/fit-rows',
         './layout-modes/vertical'
@@ -41,7 +41,7 @@
       require('./item'),
       require('./layout-mode'),
       // include default layout modes
-      require('./layout-modes/masonry'),
+      //require('./layout-modes/masonry'), // exclude masonry from pacakge.
       require('./layout-modes/fit-rows'),
       require('./layout-modes/justify-rows'),
       require('./layout-modes/vertical')
