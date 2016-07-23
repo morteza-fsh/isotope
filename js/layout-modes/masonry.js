@@ -10,15 +10,15 @@
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( [
-        '../layout-mode',
-        'masonry/masonry'
+        '../layout-mode'
+        //'masonry/masonry'
       ],
       factory );
   } else if ( typeof exports == 'object' ) {
     // CommonJS
     module.exports = factory(
-      require('../layout-mode'),
-      require('masonry-layout')
+      require('../layout-mode')
+      //require('masonry-layout')
     );
   } else {
     // browser global
