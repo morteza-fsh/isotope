@@ -78,6 +78,13 @@ Item.prototype._lazyload = function() {
     var img = images[i];
     img.setAttribute('src', img.getAttribute('data-src'));
     img.removeAttribute('data-src');
+
+    var srcset = img.getAttribute('data-srcset');
+    if ( srcset ) {
+      img.setAttribute('srcset', img.getAttribute('data-srcset'));
+      img.removeAttribute('data-srcset');
+    }
+
   }
 
   var imagesLoadedInstance;
