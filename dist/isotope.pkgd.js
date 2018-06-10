@@ -1,9 +1,5 @@
 /*!
-<<<<<<< HEAD
  * Isotope PACKAGED v3.0.6
-=======
- * Isotope PACKAGED v2.4.0
->>>>>>> new build and updated version to 2.4.0
  *
  * Licensed GPLv3 for open source use
  * or Isotope Commercial License for commercial use
@@ -178,59 +174,7 @@ return jQueryBridget;
     global.EvEmitter = factory();
   }
 
-<<<<<<< HEAD
 }( typeof window != 'undefined' ? window : this, function() {
-=======
-    /**
-     * Alias of removeEvent.
-     *
-     * Added to mirror the node API.
-     */
-    proto.removeAllListeners = alias('removeEvent');
-
-    /**
-     * Emits an event of your choice.
-     * When emitted, every listener attached to that event will be executed.
-     * If you pass the optional argument array then those arguments will be passed to every listener upon execution.
-     * Because it uses `apply`, your array of arguments will be passed as if you wrote them out separately.
-     * So they will not arrive within the array on the other side, they will be separate.
-     * You can also pass a regular expression to emit to all events that match it.
-     *
-     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
-     * @param {Array} [args] Optional array of arguments to be passed to each listener.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.emitEvent = function emitEvent(evt, args) {
-        var listenersMap = this.getListenersAsObject(evt);
-        var listeners;
-        var listener;
-        var i;
-        var key;
-        var response;
-
-        for (key in listenersMap) {
-            if (listenersMap.hasOwnProperty(key)) {
-                listeners = listenersMap[key].slice(0);
-                i = listeners.length;
-
-                while (i--) {
-                    // If the listener returns true then it shall be removed from the event
-                    // The function is executed either with a basic call or an apply if there is an args array
-                    listener = listeners[i];
-
-                    if (listener.once === true) {
-                        this.removeListener(evt, listener.listener);
-                    }
-
-                    response = listener.listener.apply(this, args || []);
-
-                    if (response === this._getOnceReturnValue()) {
-                        this.removeListener(evt, listener.listener);
-                    }
-                }
-            }
-        }
->>>>>>> new build and updated version to 2.4.0
 
 
 
@@ -2358,14 +2302,9 @@ function Item() {
 
 var proto = Item.prototype = Object.create( Outlayer.Item.prototype );
 
-<<<<<<< HEAD
 var _create = proto._create;
 proto._create = function() {
   // assign id, used for original-order sorting
-=======
-Item.prototype._create = function() {
-  // assign id, used for original-order sortings.
->>>>>>> new build and updated version to 2.4.0
   this.id = this.layout.itemGUID++;
   _create.call( this );
   this.sortData = {};
@@ -2389,13 +2328,9 @@ proto.updateSortData = function() {
   }
 };
 
-<<<<<<< HEAD
-var _destroy = proto.destroy;
-proto.destroy = function() {
-=======
 // override reveal method
-var _setPosition = Item.prototype.setPosition;
-Item.prototype.setPosition = function() {  
+var _setPosition = proto.setPosition;
+proto.setPosition = function() {  
   _setPosition.apply( this, arguments );
 
   if ( !this._lazyloadStarted && this.layout.options.lazyload ) {
@@ -2404,7 +2339,7 @@ Item.prototype.setPosition = function() {
   }
 };
 
-Item.prototype._lazyload = function() {
+proto._lazyload = function() {
   var images = this.element.querySelectorAll('img[data-src]');
   for ( var i = 0, len = images.length; i !== len; i++ ) {
     var img = images[i];
@@ -2427,9 +2362,8 @@ Item.prototype._lazyload = function() {
   this.layout.dispatchEvent( 'itemLoading', null, [ this, imagesLoadedInstance ] );
 };
 
-var _destroy = Item.prototype.destroy;
-Item.prototype.destroy = function() {
->>>>>>> new build and updated version to 2.4.0
+var _destroy = proto.destroy;
+proto.destroy = function() {
   // call super
   _destroy.apply( this, arguments );
   // reset display, #741
@@ -2600,14 +2534,8 @@ return Item;
 
 }));
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 /*!
-<<<<<<< HEAD
  * Masonry v4.2.1
-=======
- * Masonry v3.3.2
->>>>>>> new build and updated version to 2.4.0
  * Cascading grid layout library
  * https://masonry.desandro.com
  * MIT License
@@ -2690,7 +2618,6 @@ return Item;
     var mathMethod = excess && excess < 1 ? 'round' : 'floor';
     cols = Math[ mathMethod ]( cols );
     this.cols = Math.max( cols, 1 );
-
   };
 
   proto.getContainerWidth = function() {
@@ -2711,18 +2638,10 @@ return Item;
     // round if off by 1 pixel, otherwise use ceil
     var colSpan = Math[ mathMethod ]( item.size.outerWidth / this.columnWidth );
     colSpan = Math.min( colSpan, this.cols );
-<<<<<<< HEAD
     // use horizontal or top column position
     var colPosMethod = this.options.horizontalOrder ?
       '_getHorizontalColPosition' : '_getTopColPosition';
     var colPosition = this[ colPosMethod ]( colSpan, item );
-=======
-
-    var colGroup = this._getColGroup( colSpan );
-    // get the minimum Y value from the columns
-    var minimumY = Math.min.apply( Math, colGroup );
-    var shortColIndex = utils.indexOf( colGroup, minimumY );
->>>>>>> new build and updated version to 2.4.0
     // position the brick
     var position = {
       x: this.columnWidth * colPosition.col,
@@ -2874,31 +2793,8 @@ return Item;
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
-      require('../layout-mode'),
-      require('masonry-layout')
-=======
-/*!
- * Masonry layout mode
- * sub-classes Masonry
- * http://masonry.desandro.com
- */
-
-( function( window, factory ) {
-  'use strict';
-  // universal module definition
-  if ( typeof define == 'function' && define.amd ) {
-    // AMD
-    define( 'isotope/js/layout-modes/masonry',[
-        '../layout-mode'
-        //'masonry/masonry'
-      ],
-      factory );
-  } else if ( typeof exports == 'object' ) {
-    // CommonJS
-    module.exports = factory(
       require('../layout-mode')
       //require('masonry-layout')
->>>>>>> excluded masonry from the isotop masonry layout
     );
   } else {
     // browser global
@@ -2911,25 +2807,11 @@ return Item;
 }( window, function factory( LayoutMode, Masonry ) {
 'use strict';
 
-<<<<<<< HEAD
-=======
-// -------------------------- helpers -------------------------- //
-
-// extend objects
-function extend( a, b ) {
-  for ( var prop in b ) {
-    a[ prop ] = b[ prop ];
-  }
-  return a;
-}
-
->>>>>>> excluded masonry from the isotop masonry layout
 // -------------------------- masonryDefinition -------------------------- //
 
   // create an Outlayer layout class
   var MasonryMode = LayoutMode.create('masonry');
 
-<<<<<<< HEAD
   var proto = MasonryMode.prototype;
 
   var keepModeMethods = {
@@ -2948,29 +2830,11 @@ function extend( a, b ) {
 
   var measureColumns = proto.measureColumns;
   proto.measureColumns = function() {
-=======
-  // save on to these methods
-  var _getElementOffset = MasonryMode.prototype._getElementOffset;
-  var layout = MasonryMode.prototype.layout;
-  var _getMeasurement = MasonryMode.prototype._getMeasurement;
-
-  // sub-class Masonry
-  extend( MasonryMode.prototype, Masonry.prototype );
-
-  // set back, as it was overwritten by Masonry
-  MasonryMode.prototype._getElementOffset = _getElementOffset;
-  MasonryMode.prototype.layout = layout;
-  MasonryMode.prototype._getMeasurement = _getMeasurement;
-
-  var measureColumns = MasonryMode.prototype.measureColumns;
-  MasonryMode.prototype.measureColumns = function() {
->>>>>>> excluded masonry from the isotop masonry layout
     // set items, used if measuring first item
     this.items = this.isotope.filteredItems;
     measureColumns.call( this );
   };
 
-<<<<<<< HEAD
   // point to mode options for fitWidth
   var _getOption = proto._getOption;
   proto._getOption = function( option ) {
@@ -2979,25 +2843,12 @@ function extend( a, b ) {
         this.options.isFitWidth : this.options.fitWidth;
     }
     return _getOption.apply( this.isotope, arguments );
-=======
-  // HACK copy over isOriginLeft/Top options
-  var _manageStamp = MasonryMode.prototype._manageStamp;
-  MasonryMode.prototype._manageStamp = function() {
-    this.options.isOriginLeft = this.isotope.options.isOriginLeft;
-    this.options.isOriginTop = this.isotope.options.isOriginTop;
-    _manageStamp.apply( this, arguments );
->>>>>>> excluded masonry from the isotop masonry layout
   };
 
   return MasonryMode;
 
 }));
 
-<<<<<<< HEAD
-=======
->>>>>>> excluded masonry script from the package
-=======
->>>>>>> excluded masonry from the isotop masonry layout
 /**
  * justifyRows layout mode
  */
@@ -3007,7 +2858,7 @@ function extend( a, b ) {
   // universal module definition
   if ( typeof define == 'function' && define.amd ) {
     // AMD
-    define( 'isotope/js/layout-modes/justify-rows',[
+    define( 'isotope-layout/js/layout-modes/justify-rows',[
         '../layout-mode'
       ],
       factory );
@@ -3028,14 +2879,16 @@ function extend( a, b ) {
 
 var JustifyRows = LayoutMode.create('justifyRows');
 
-JustifyRows.prototype._resetLayout = function() {
+var proto = JustifyRows.prototype;
+
+proto._resetLayout = function() {
   this.x = 0;
   this.y = 0;
   this.maxY = 0;
   this._getMeasurement( 'gutter', 'outerWidth' );
 };
 
-JustifyRows.prototype._getRowHeight = function( rowItems, containerWidth ) {
+proto._getRowHeight = function( rowItems, containerWidth ) {
   containerWidth = containerWidth - rowItems.length * this.gutter;
   var totalHeight = 0;
   for ( var i = 0, len = rowItems.length; i !== len; i++ ) {
@@ -3049,7 +2902,7 @@ JustifyRows.prototype._getRowHeight = function( rowItems, containerWidth ) {
   return containerWidth / totalHeight;
 };
 
-JustifyRows.prototype._resizeItems = function( rowItems, rowHeight ) {
+proto._resizeItems = function( rowItems, rowHeight ) {
   for ( var i = 0, len = rowItems.length; i !== len; i++ ) {
     var itemEle = rowItems[i].element,
         w = parseInt( itemEle.getAttribute( 'data-width' ), 10 ) || rowItems[i].size.outerWidth,
@@ -3060,7 +2913,7 @@ JustifyRows.prototype._resizeItems = function( rowItems, rowHeight ) {
   }
 };
 
-JustifyRows.prototype._beforeLayout = function() {
+proto._beforeLayout = function() {
   var maxHeight = this.options.maxHeight || 200,
       containerWidth = this.isotope.size.innerWidth + this.gutter;
 
@@ -3086,7 +2939,7 @@ JustifyRows.prototype._beforeLayout = function() {
   }
 };
 
-JustifyRows.prototype._getItemLayoutPosition = function( item ) {
+proto._getItemLayoutPosition = function( item ) {
   item.getSize();
   var itemWidth = item.size.outerWidth + this.gutter;
   // if this element cannot fit in the current row
@@ -3107,7 +2960,7 @@ JustifyRows.prototype._getItemLayoutPosition = function( item ) {
   return position;
 };
 
-JustifyRows.prototype._getContainerSize = function() {
+proto._getContainerSize = function() {
   return { height: this.maxY };
 };
 
@@ -3240,11 +3093,7 @@ return Vertical;
 }));
 
 /*!
-<<<<<<< HEAD
  * Isotope v3.0.6
-=======
- * Isotope v2.4.0
->>>>>>> new build and updated version to 2.4.0
  *
  * Licensed GPLv3 for open source use
  * or Isotope Commercial License for commercial use
@@ -3266,24 +3115,10 @@ return Vertical;
         'isotope-layout/js/item',
         'isotope-layout/js/layout-mode',
         // include default layout modes
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         'isotope-layout/js/layout-modes/masonry',
+        'isotope-layout/js/layout-modes/justify-rows',
         'isotope-layout/js/layout-modes/fit-rows',
         'isotope-layout/js/layout-modes/vertical'
-=======
-        'isotope/js/layout-modes/masonry',
-=======
-        //'isotope/js/layout-modes/masonry', // exclude masonry from pacakge.
->>>>>>> excluded masonry script from the package
-=======
-        'isotope/js/layout-modes/masonry',
->>>>>>> excluded masonry from the isotop masonry layout
-        'isotope/js/layout-modes/justify-rows',
-        'isotope/js/layout-modes/fit-rows',
-        'isotope/js/layout-modes/vertical'
->>>>>>> included justify rows layoutmode to dist
       ],
       function( Outlayer, getSize, matchesSelector, utils, Item, LayoutMode ) {
         return factory( window, Outlayer, getSize, matchesSelector, utils, Item, LayoutMode );
@@ -3299,24 +3134,10 @@ return Vertical;
       require('isotope-layout/js/item'),
       require('isotope-layout/js/layout-mode'),
       // include default layout modes
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
       require('isotope-layout/js/layout-modes/masonry'),
       require('isotope-layout/js/layout-modes/fit-rows'),
+      require('isotope-layout/js/layout-modes/justify-rows'),
       require('isotope-layout/js/layout-modes/vertical')
-=======
-      require('./layout-modes/masonry'),
-=======
-      //require('./layout-modes/masonry'), // exclude masonry from pacakge.
->>>>>>> excluded masonry script from the package
-=======
-      require('./layout-modes/masonry'),
->>>>>>> excluded masonry from the isotop masonry layout
-      require('./layout-modes/fit-rows'),
-      require('./layout-modes/justify-rows'),
-      require('./layout-modes/vertical')
->>>>>>> included justify rows layoutmode to dist
     );
   } else {
     // browser global
@@ -3465,8 +3286,6 @@ var trim = String.prototype.trim ?
     this.filteredItems = filtered.matches;
     this.notPaginatedItems = this.filteredItems;
 
-<<<<<<< HEAD
-=======
     this._sort(); 
 
     if ( this.options.pagination ) {
@@ -3475,7 +3294,6 @@ var trim = String.prototype.trim ?
       filtered.needReveal = paginationResult.needReveal;
     }
 
->>>>>>> new build and updated version to 2.4.0
     this._bindArrangeComplete();
     this._hideRevealItems( filtered );
 
@@ -3493,20 +3311,13 @@ var trim = String.prototype.trim ?
   Isotope.prototype._init = Isotope.prototype.arrange;
 
   // hide and reveal items
-  Isotope.prototype._hideRevealItems = function( items ) {
-    var _this = this;
-    function hideReveal() {
-      _this.reveal( items.needReveal );
-      _this.hide( items.needHide );
-    }
-    
+  proto._hideRevealItems = function( items ) {
     if ( this._isInstant ) {
-      this._noTransition( this._hideReveal, [ filtered ] );
+      this._noTransition( this._hideReveal, [ items ] );
     } else {
-      this._hideReveal( filtered );
+      this._hideReveal( items );
     }
   };
-<<<<<<< HEAD
   // alias to _init for main plugin method
   proto._init = proto.arrange;
 
@@ -3514,8 +3325,7 @@ var trim = String.prototype.trim ?
     this.reveal( filtered.needReveal );
     this.hide( filtered.needHide );
   };
-=======
->>>>>>> new build and updated version to 2.4.0
+
 
   // HACK
   // Don't animate/transition first layout
@@ -3556,7 +3366,7 @@ var trim = String.prototype.trim ?
   // -------------------------- page -------------------------- //
   
   // private method to devide filtered items to pages
-  Isotope.prototype._pagination = function() {
+  proto._pagination = function() {
     // move to fist page if filter changed
     if ( this._lastFilter !== this.options.filter ) {
       this._lastFilter = this.options.filter;
@@ -3610,39 +3420,39 @@ var trim = String.prototype.trim ?
   };
 
   // change current page of isotope
-  Isotope.prototype.page = function( pageNum ) {
+  proto.page = function( pageNum ) {
     this.options.page = Math.max( 1, Math.min( pageNum, this.totalPages() ) );
     this._hideRevealItems( this._pagination() );
     this._layout();
   };
 
   // go to next page
-  Isotope.prototype.nextPage = function() {
+  proto.nextPage = function() {
     this.page( this.options.page + 1 );
   };
 
   // go to previous page
-  Isotope.prototype.previousPage = function() {
+  proto.previousPage = function() {
     this.page( this.options.page - 1 );
   };
 
   // go to last page
-  Isotope.prototype.lastPage = function() {
+  proto.lastPage = function() {
     this.page( this.totalPages() );
   };
 
   // go to first page
-  Isotope.prototype.firstPage = function() {
+  proto.firstPage = function() {
     this.page( 1 );
   };
 
   // get total pages
-  Isotope.prototype.totalPages = function() {
+  proto.totalPages = function() {
     return this._totalPages;
   };
 
   // get current page
-  Isotope.prototype.currentPage = function() {
+  proto.currentPage = function() {
     return this.options.page;
   };
 
@@ -3828,9 +3638,12 @@ var trim = String.prototype.trim ?
       this.sortHistory = sortBys.concat( this.sortHistory );
     }
     // sort magic
-<<<<<<< HEAD
     var itemSorter = getItemSorter( this.sortHistory, this.options.sortAscending );
-    this.filteredItems.sort( itemSorter );
+    if ( this.options.pagination ) {
+      this.notPaginatedItems.sort( itemSorter );
+    } else {
+      this.filteredItems.sort( itemSorter );
+    }
   };
 
   // check if sortBys is same as start of sortHistory
@@ -3839,20 +3652,6 @@ var trim = String.prototype.trim ?
       if ( sortBys[i] != this.sortHistory[i] ) {
         return false;
       }
-=======
-    var itemSorter = getItemSorter( sortBys, this.options.sortAscending );
-    
-    if ( this.options.pagination ) {
-      this.notPaginatedItems.sort( itemSorter );
-    } else {
-      this.filteredItems.sort( itemSorter );
-    }
-
-    // keep track of sortBy History
-    if ( sortByOpt != this.sortHistory[0] ) {
-      // add to front, oldest goes in last
-      this.sortHistory.unshift( sortByOpt );
->>>>>>> new build and updated version to 2.4.0
     }
     return true;
   };
@@ -3998,19 +3797,13 @@ var trim = String.prototype.trim ?
     this.items = items.concat( this.items );
   };
 
-<<<<<<< HEAD
   proto._filterRevealAdded = function( items ) {
-=======
-  Isotope.prototype._filterRevealAdded = function( items, reveal ) {
->>>>>>> new build and updated version to 2.4.0
     var filtered = this._filter( items );
     this.hide( filtered.needHide );
-    if ( reveal !== false ) {
-      // reveal all new items
-      this.reveal( filtered.matches );
-      // layout new items, no transition
-      this.layoutItems( filtered.matches, true );
-    }
+    // reveal all new items
+    this.reveal( filtered.matches );
+    // layout new items, no transition
+    this.layoutItems( filtered.matches, true );
     return filtered.matches;
   };
 

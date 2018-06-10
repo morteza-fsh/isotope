@@ -28,14 +28,16 @@
 
 var JustifyRows = LayoutMode.create('justifyRows');
 
-JustifyRows.prototype._resetLayout = function() {
+var proto = JustifyRows.prototype;
+
+proto._resetLayout = function() {
   this.x = 0;
   this.y = 0;
   this.maxY = 0;
   this._getMeasurement( 'gutter', 'outerWidth' );
 };
 
-JustifyRows.prototype._getRowHeight = function( rowItems, containerWidth ) {
+proto._getRowHeight = function( rowItems, containerWidth ) {
   containerWidth = containerWidth - rowItems.length * this.gutter;
   var totalHeight = 0;
   for ( var i = 0, len = rowItems.length; i !== len; i++ ) {
@@ -49,7 +51,7 @@ JustifyRows.prototype._getRowHeight = function( rowItems, containerWidth ) {
   return containerWidth / totalHeight;
 };
 
-JustifyRows.prototype._resizeItems = function( rowItems, rowHeight ) {
+proto._resizeItems = function( rowItems, rowHeight ) {
   for ( var i = 0, len = rowItems.length; i !== len; i++ ) {
     var itemEle = rowItems[i].element,
         w = parseInt( itemEle.getAttribute( 'data-width' ), 10 ) || rowItems[i].size.outerWidth,
@@ -60,7 +62,7 @@ JustifyRows.prototype._resizeItems = function( rowItems, rowHeight ) {
   }
 };
 
-JustifyRows.prototype._beforeLayout = function() {
+proto._beforeLayout = function() {
   var maxHeight = this.options.maxHeight || 200,
       containerWidth = this.isotope.size.innerWidth + this.gutter;
 
@@ -86,7 +88,7 @@ JustifyRows.prototype._beforeLayout = function() {
   }
 };
 
-JustifyRows.prototype._getItemLayoutPosition = function( item ) {
+proto._getItemLayoutPosition = function( item ) {
   item.getSize();
   var itemWidth = item.size.outerWidth + this.gutter;
   // if this element cannot fit in the current row
@@ -107,7 +109,7 @@ JustifyRows.prototype._getItemLayoutPosition = function( item ) {
   return position;
 };
 
-JustifyRows.prototype._getContainerSize = function() {
+proto._getContainerSize = function() {
   return { height: this.maxY };
 };
 
