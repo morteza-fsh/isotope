@@ -28,17 +28,13 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.1.8/imagesloaded.pkgd.min.js"></script>
-<script src="../bower_components/eventEmitter/EventEmitter.js"></script>
-<script src="../bower_components/eventie/eventie.js"></script>
-<script src="../bower_components/doc-ready/doc-ready.js"></script>
-<script src="../bower_components/get-style-property/get-style-property.js"></script>
+<script src="../bower_components/ev-emitter/ev-emitter.js"></script>
 <script src="../bower_components/get-size/get-size.js"></script>
-<script src="../bower_components/jquery-bridget/jquery.bridget.js"></script>
-<script src="../bower_components/matches-selector/matches-selector.js"></script>
+<script src="../bower_components/desandro-matches-selector/matches-selector.js"></script>
 <script src="../bower_components/fizzy-ui-utils/utils.js"></script>
 <script src="../bower_components/outlayer/item.js"></script>
 <script src="../bower_components/outlayer/outlayer.js"></script>
-<script src="../bower_components/masonry/masonry.js"></script>
+<script src="../bower_components/masonry-layout/masonry.js"></script>
 
 <script src="../js/item.js"></script>
 <script src="../js/layout-mode.js"></script>
@@ -46,9 +42,9 @@
 <script src="../js/layout-modes/fit-rows.js"></script>
 <script src="../js/layout-modes/masonry.js"></script>
 
+
 <script>
 var iso;
-docReady( function() {
 
   var container = document.querySelector('#container');
   iso = new Isotope( container, {
@@ -64,20 +60,20 @@ docReady( function() {
     isInitLayout: false
   });
 
-  eventie.bind( document.querySelector('#prepend'), 'click', function() {
-    // prepend 3 new items
-    iso.prepended( [ prependItem(), prependItem(), prependItem() ] );
-  });
+document.querySelector('#prepend').addEventListener( 'click', function() {
+  // prepend 3 new items
+  iso.prepended( [ prependItem(), prependItem(), prependItem() ] );
+});
 
-  eventie.bind( document.querySelector('#insert'), 'click', function() {
-    // insert 3 new items
-    iso.insert( [ getItem(), getItem(), getItem() ] );
-  });
+document.querySelector('#insert').addEventListener( 'click', function() {
+  // insert 3 new items
+  iso.insert( [ getItem(), getItem(), getItem() ] );
+});
 
-  eventie.bind( document.querySelector('#append'), 'click', function() {
-    // append 3 new items
-    iso.appended( [ appendItem(), appendItem(), appendItem() ] );
-  });
+document.querySelector('#append').addEventListener( 'click', function() {
+  // append 3 new items
+  iso.appended( [ appendItem(), appendItem(), appendItem() ] );
+});
 
 
   function getItem() {
@@ -107,7 +103,7 @@ docReady( function() {
   }
 
    var options = document.querySelector('#options');
-  eventie.bind( options, 'click', function( event ) {
+   options.addEventListener( 'click', function( event ) {
     if ( !matchesSelector( event.target, 'button' ) ) {
       return;
     }
@@ -149,7 +145,7 @@ docReady( function() {
 
   iso.arrange();
 
-});
+
 
 var docElem = document.documentElement;
 

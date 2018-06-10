@@ -216,17 +216,11 @@ var trim = String.prototype.trim ?
   Isotope.prototype._init = Isotope.prototype.arrange;
 
   // hide and reveal items
-  Isotope.prototype._hideRevealItems = function( items ) {
-    var _this = this;
-    function hideReveal() {
-      _this.reveal( items.needReveal );
-      _this.hide( items.needHide );
-    }
-    
+  proto._hideRevealItems = function( items ) {
     if ( this._isInstant ) {
-      this._noTransition( this._hideReveal, [ filtered ] );
+      this._noTransition( this._hideReveal, [ items ] );
     } else {
-      this._hideReveal( filtered );
+      this._hideReveal( items );
     }
   };
   // alias to _init for main plugin method
@@ -277,7 +271,7 @@ var trim = String.prototype.trim ?
   // -------------------------- page -------------------------- //
   
   // private method to devide filtered items to pages
-  Isotope.prototype._pagination = function() {
+  proto._pagination = function() {
     // move to fist page if filter changed
     if ( this._lastFilter !== this.options.filter ) {
       this._lastFilter = this.options.filter;
@@ -331,39 +325,39 @@ var trim = String.prototype.trim ?
   };
 
   // change current page of isotope
-  Isotope.prototype.page = function( pageNum ) {
+  proto.page = function( pageNum ) {
     this.options.page = Math.max( 1, Math.min( pageNum, this.totalPages() ) );
     this._hideRevealItems( this._pagination() );
     this._layout();
   };
 
   // go to next page
-  Isotope.prototype.nextPage = function() {
+  proto.nextPage = function() {
     this.page( this.options.page + 1 );
   };
 
   // go to previous page
-  Isotope.prototype.previousPage = function() {
+  proto.previousPage = function() {
     this.page( this.options.page - 1 );
   };
 
   // go to last page
-  Isotope.prototype.lastPage = function() {
+  proto.lastPage = function() {
     this.page( this.totalPages() );
   };
 
   // go to first page
-  Isotope.prototype.firstPage = function() {
+  proto.firstPage = function() {
     this.page( 1 );
   };
 
   // get total pages
-  Isotope.prototype.totalPages = function() {
+  proto.totalPages = function() {
     return this._totalPages;
   };
 
   // get current page
-  Isotope.prototype.currentPage = function() {
+  proto.currentPage = function() {
     return this.options.page;
   };
 
@@ -712,12 +706,10 @@ var trim = String.prototype.trim ?
   proto._filterRevealAdded = function( items ) {
     var filtered = this._filter( items );
     this.hide( filtered.needHide );
-    if ( reveal !== false ) {
-      // reveal all new items
-      this.reveal( filtered.matches );
-      // layout new items, no transition
-      this.layoutItems( filtered.matches, true );
-    }
+    // reveal all new items
+    this.reveal( filtered.matches );
+    // layout new items, no transition
+    this.layoutItems( filtered.matches, true );
     return filtered.matches;
   };
 
