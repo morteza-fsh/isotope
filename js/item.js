@@ -67,6 +67,19 @@ var _setPosition = proto.setPosition;
 proto.setPosition = function() {  
   _setPosition.apply( this, arguments );
 
+  if ( this.layout.options.imgSizes ) {
+    if ( !this.imageElements ) {
+      this.imageElements = this.element.querySelectorAll( 'img[sizes="auto"]' );
+    }
+    
+    var images = this.imageElements;
+    
+    for ( var i = 0, len = images.length; i !== len; i++ ) {
+      var img = images[i];
+      img.setAttribute( 'sizes', img.offsetWidth + 'px' );
+    }
+  }
+  
   if ( !this._lazyloadStarted && this.layout.options.lazyload ) {
     this._lazyloadStarted = true;
     this._lazyload();
@@ -74,6 +87,8 @@ proto.setPosition = function() {
 };
 
 proto._lazyload = function() {
+  this.layout.dispatchEvent( 'beforeItemLoading', null, [ this ] );
+
   var images = this.element.querySelectorAll('img[data-src]');
   for ( var i = 0, len = images.length; i !== len; i++ ) {
     var img = images[i];
