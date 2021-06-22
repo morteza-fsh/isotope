@@ -15,36 +15,36 @@
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( [
-        'outlayer/outlayer',
-        'get-size/get-size',
-        'desandro-matches-selector/matches-selector',
-        'fizzy-ui-utils/utils',
-        './item',
-        './layout-mode',
-        // include default layout modes
-        './layout-modes/masonry',
-        './layout-modes/justify-rows',
-        './layout-modes/fit-rows',
-        './layout-modes/vertical'
-      ],
-      function( Outlayer, getSize, matchesSelector, utils, Item, LayoutMode ) {
+      'outlayer/outlayer',
+      'get-size/get-size',
+      'desandro-matches-selector/matches-selector',
+      'fizzy-ui-utils/utils',
+      './item',
+      './layout-mode',
+      // include default layout modes
+      './layout-modes/masonry',
+      './layout-modes/justify-rows',
+      './layout-modes/fit-rows',
+      './layout-modes/vertical',
+    ],
+    function( Outlayer, getSize, matchesSelector, utils, Item, LayoutMode ) {
         return factory( window, Outlayer, getSize, matchesSelector, utils, Item, LayoutMode );
-      });
+      } );
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
-      window,
-      require('outlayer'),
-      require('get-size'),
-      require('desandro-matches-selector'),
-      require('fizzy-ui-utils'),
-      require('./item'),
-      require('./layout-mode'),
-      // include default layout modes
-      require('./layout-modes/masonry'),
-      require('./layout-modes/fit-rows'),
-      require('./layout-modes/justify-rows'),
-      require('./layout-modes/vertical')
+        window,
+        require('outlayer'),
+        require('get-size'),
+        require('desandro-matches-selector'),
+        require('fizzy-ui-utils'),
+        require('./item'),
+        require('./layout-mode'),
+        // include default layout modes
+        require('./layout-modes/masonry'),
+        require('./layout-modes/fit-rows'),
+        require('./layout-modes/justify-rows'),
+        require('./layout-modes/vertical')
     );
   } else {
     // browser global
@@ -87,11 +87,11 @@ var trim = String.prototype.trim ?
     sortAscending: true,
     pagination: false,
     inPage: 20,
-    page:1,
+    page: 1,
     useImagesLoaded: true,
-    lazyload:false,
-    resizeTransition: true
-  });
+    lazyload: false,
+    resizeTransition: true,
+  } );
 
   Isotope.Item = Item;
   Isotope.LayoutMode = LayoutMode;
@@ -172,7 +172,7 @@ var trim = String.prototype.trim ?
     this._isLayoutInited = true;
   };
 
-  //override layoutItems method
+  // override layoutItems method
   var _layoutItems = Isotope.prototype.layoutItems;
   Isotope.prototype.layoutItems = function( items, isInstant ) {
     this._beforeLayout( items, isInstant );
@@ -191,7 +191,7 @@ var trim = String.prototype.trim ?
     this.filteredItems = filtered.matches;
     this.notPaginatedItems = this.filteredItems;
 
-    this._sort(); 
+    this._sort();
 
     if ( this.options.pagination ) {
       var paginationResult = this._pagination();
@@ -231,7 +231,6 @@ var trim = String.prototype.trim ?
     this.hide( filtered.needHide );
   };
 
-
   // HACK
   // Don't animate/transition first layout
   // Or don't animate/transition other layouts
@@ -269,7 +268,7 @@ var trim = String.prototype.trim ?
   };
 
   // -------------------------- page -------------------------- //
-  
+
   // private method to devide filtered items to pages
   proto._pagination = function() {
     // move to fist page if filter changed
@@ -283,14 +282,15 @@ var trim = String.prototype.trim ?
       this.notPaginatedItems = this.filteredItems;
     }
 
-    var page = this.options.page,
-        items = this.notPaginatedItems,
-        startItemInPage = ( page - 1 ) * this.options.inPage,
-        endItemInPage = startItemInPage + this.options.inPage - 1,
-        inPage = [], needHide = [], needReveal = [];
+    var page = this.options.page;
+    var items = this.notPaginatedItems;
+    var startItemInPage = ( page - 1 ) * this.options.inPage;
+    var endItemInPage = startItemInPage + this.options.inPage - 1;
+    var inPage = []; var needHide = []; var
+            needReveal = [];
 
-    var totalPages = Math.ceil( items.length / this.options.inPage ),
-        pageChanged = this._lastPage !== page || this._totalPages !== totalPages;
+    var totalPages = Math.ceil( items.length / this.options.inPage );
+    var pageChanged = this._lastPage !== page || this._totalPages !== totalPages;
 
     this._lastPage = page;
     this._totalPages = totalPages;
@@ -308,7 +308,7 @@ var trim = String.prototype.trim ?
         needHide.push( item );
       }
     }
-    
+
     // update filtered items
     this.filteredItems = inPage;
 
@@ -319,7 +319,7 @@ var trim = String.prototype.trim ?
     return {
       matches: inPage,
       needHide: needHide,
-      needReveal: needReveal
+      needReveal: needReveal,
     };
 
   };
@@ -383,7 +383,7 @@ var trim = String.prototype.trim ?
       // item.isFilterMatched = isMatched;
       // add to matches if its a match
       if ( isMatched ) {
-          matches.push( item );
+        matches.push( item );
       }
       // add to additional group if item needs to be hidden or revealed
       if ( isMatched && item.isHidden ) {
@@ -602,13 +602,13 @@ var trim = String.prototype.trim ?
     Outlayer.prototype._resetLayout.call( this );
     this._mode()._resetLayout();
   };
-  
-  Isotope.prototype._beforeLayout = function ( items, isInstant ) {
+
+  Isotope.prototype._beforeLayout = function( items, isInstant ) {
     var mode = this._mode();
     if ( mode._beforeLayout ) {
       mode._beforeLayout( items, isInstant );
     }
-  };  
+  };
 
   proto._getItemLayoutPosition = function( item ) {
     return this._mode()._getItemLayoutPosition( item );
@@ -688,14 +688,14 @@ var trim = String.prototype.trim ?
     var filteredItems = this._filterRevealAdded( items, !pagination );
 
     // layout previous items
-    if ( !pagination )  { 
+    if ( !pagination ) {
       this.layoutItems( this.filteredItems );
       // add to items and filteredItems
       this.filteredItems = filteredItems.concat( this.filteredItems );
     } else {
       // add new items to the notPaginatedItems instead of filtered items, it will be filtered again by pagination method next.
       this.notPaginatedItems = filteredItems.concat( this.notPaginatedItems );
-      var paginateResult = this._pagination(); 
+      var paginateResult = this._pagination();
       this._hideRevealItems( paginateResult );
       this.layoutItems( this.filteredItems );
     }

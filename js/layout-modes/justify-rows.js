@@ -8,18 +8,18 @@
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( [
-        '../layout-mode'
-      ],
-      factory );
+      '../layout-mode',
+    ],
+    factory );
   } else if ( typeof exports == 'object' ) {
     // CommonJS
     module.exports = factory(
-      require('../layout-mode')
+        require('../layout-mode')
     );
   } else {
     // browser global
     factory(
-      window.Isotope.LayoutMode
+        window.Isotope.LayoutMode
     );
   }
 
@@ -38,39 +38,39 @@ proto._resetLayout = function() {
 };
 
 proto._getRowHeight = function( rowItems, containerWidth ) {
-  containerWidth = containerWidth - rowItems.length * this.gutter;
+  containerWidth -= rowItems.length * this.gutter;
   var totalHeight = 0;
   for ( var i = 0, len = rowItems.length; i !== len; i++ ) {
-    var itemEle = rowItems[i].element,
-        w = parseInt( itemEle.getAttribute( 'data-width' ), 10 ) || rowItems[i].size.outerWidth,
-        h = parseInt( itemEle.getAttribute( 'data-height' ), 10 ) || rowItems[i].size.outerHeight;
+    var itemEle = rowItems[i].element;
+    var w = parseInt( itemEle.getAttribute('data-width'), 10 ) || rowItems[i].size.outerWidth;
+    var h = parseInt( itemEle.getAttribute('data-height'), 10 ) || rowItems[i].size.outerHeight;
 
-    totalHeight += w / h;
+    totalHeight += w/h;
   }
 
-  return containerWidth / totalHeight;
+  return containerWidth/totalHeight;
 };
 
 proto._resizeItems = function( rowItems, rowHeight ) {
   for ( var i = 0, len = rowItems.length; i !== len; i++ ) {
-    var itemEle = rowItems[i].element,
-        w = parseInt( itemEle.getAttribute( 'data-width' ), 10 ) || rowItems[i].size.outerWidth,
-        h = parseInt( itemEle.getAttribute( 'data-height' ), 10 ) || rowItems[i].size.outerHeight;
+    var itemEle = rowItems[i].element;
+    var w = parseInt( itemEle.getAttribute('data-width'), 10 ) || rowItems[i].size.outerWidth;
+    var h = parseInt( itemEle.getAttribute('data-height'), 10 ) || rowItems[i].size.outerHeight;
 
-    itemEle.style.width = rowHeight * w / h + 'px';
+    itemEle.style.width = rowHeight * w/h + 'px';
     itemEle.style.height = rowHeight + 'px';
   }
 };
 
 proto._beforeLayout = function() {
-  var maxHeight = this.options.maxHeight || 200,
-      containerWidth = this.isotope.size.innerWidth + this.gutter;
+  var maxHeight = this.options.maxHeight || 200;
+  var containerWidth = this.isotope.size.innerWidth + this.gutter;
 
-  var checkItems = this.isotope.filteredItems.slice( 0 ),
-      row, rowHeight;
-  
+  var checkItems = this.isotope.filteredItems.slice( 0 );
+  var row, rowHeight;
+
   newRow: while ( checkItems.length > 0 ) {
-    
+
     for ( var i = 0, len = checkItems.length; i !== len; i++ ) {
       row = checkItems.slice( 0, i + 1 ),
       rowHeight = this._getRowHeight( row, containerWidth );
@@ -84,7 +84,7 @@ proto._beforeLayout = function() {
 
     // last row
     this._resizeItems( row, Math.min( rowHeight, maxHeight ) );
-    break;  
+    break;
   }
 };
 
@@ -100,7 +100,7 @@ proto._getItemLayoutPosition = function( item ) {
 
   var position = {
     x: this.x,
-    y: this.y
+    y: this.y,
   };
 
   this.maxY = Math.max( this.maxY, this.y + item.size.outerHeight );
@@ -115,4 +115,4 @@ proto._getContainerSize = function() {
 
 return JustifyRows;
 
-}));
+} ) );

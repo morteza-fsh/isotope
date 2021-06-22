@@ -5,7 +5,7 @@
  * or Isotope Commercial License for commercial use
  *
  * https://isotope.metafizzy.co
- * Copyright 2010-2018 Metafizzy
+ * Copyright 2010-2020 Metafizzy
  */
 
 /**
@@ -2270,23 +2270,22 @@ return Outlayer;
 
 ( function( window, factory ) {
   // universal module definition
-  /* jshint strict: false */ /*globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( 'isotope-layout/js/item',[
-        'outlayer/outlayer'
-      ],
-      factory );
+      'outlayer/outlayer',
+    ],
+    factory );
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
-      require('outlayer')
+        require('outlayer')
     );
   } else {
     // browser global
     window.Isotope = window.Isotope || {};
     window.Isotope.Item = factory(
-      window.Outlayer
+        window.Outlayer
     );
   }
 
@@ -2330,22 +2329,22 @@ proto.updateSortData = function() {
 
 // override reveal method
 var _setPosition = proto.setPosition;
-proto.setPosition = function() {  
+proto.setPosition = function() {
   _setPosition.apply( this, arguments );
 
   if ( this.layout.options.imgSizes ) {
     if ( !this.imageElements ) {
-      this.imageElements = this.element.querySelectorAll( 'img[sizes="auto"]' );
+      this.imageElements = this.element.querySelectorAll('img[sizes="auto"]');
     }
-    
+
     var images = this.imageElements;
-    
+
     for ( var i = 0, len = images.length; i !== len; i++ ) {
       var img = images[i];
       img.setAttribute( 'sizes', img.offsetWidth + 'px' );
     }
   }
-  
+
   if ( !this._lazyloadStarted && this.layout.options.lazyload ) {
     this._lazyloadStarted = true;
     this._lazyload();
@@ -2358,12 +2357,12 @@ proto._lazyload = function() {
   var images = this.element.querySelectorAll('img[data-src]');
   for ( var i = 0, len = images.length; i !== len; i++ ) {
     var img = images[i];
-    img.setAttribute('src', img.getAttribute('data-src'));
+    img.setAttribute( 'src', img.getAttribute('data-src') );
     img.removeAttribute('data-src');
 
     var srcset = img.getAttribute('data-srcset');
     if ( srcset ) {
-      img.setAttribute('srcset', img.getAttribute('data-srcset'));
+      img.setAttribute( 'srcset', img.getAttribute('data-srcset') );
       img.removeAttribute('data-srcset');
     }
 
@@ -2383,13 +2382,13 @@ proto.destroy = function() {
   _destroy.apply( this, arguments );
   // reset display, #741
   this.css({
-    display: ''
+    display: '',
   });
 };
 
 return Item;
 
-}));
+} ) );
 
 /**
  * Isotope LayoutMode
@@ -2397,26 +2396,25 @@ return Item;
 
 ( function( window, factory ) {
   // universal module definition
-  /* jshint strict: false */ /*globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( 'isotope-layout/js/layout-mode',[
-        'get-size/get-size',
-        'outlayer/outlayer'
-      ],
-      factory );
+      'get-size/get-size',
+      'outlayer/outlayer',
+    ],
+    factory );
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
-      require('get-size'),
-      require('outlayer')
+        require('get-size'),
+        require('outlayer')
     );
   } else {
     // browser global
     window.Isotope = window.Isotope || {};
     window.Isotope.LayoutMode = factory(
-      window.getSize,
-      window.Outlayer
+        window.getSize,
+        window.Outlayer
     );
   }
 
@@ -2448,14 +2446,14 @@ return Item;
     '_getContainerSize',
     '_getElementOffset',
     'needsResizeLayout',
-    '_getOption'
+    '_getOption',
   ];
 
   facadeMethods.forEach( function( methodName ) {
     proto[ methodName ] = function() {
       return Outlayer.prototype[ methodName ].apply( this.isotope, arguments );
     };
-  });
+  } );
 
   // -----  ----- //
 
@@ -2485,9 +2483,9 @@ return Item;
 
   /**
    * get columnWidth or rowHeight
-   * segment: 'column' or 'row'
-   * size 'Width' or 'Height'
-  **/
+   * @param {String} segment - 'column' or 'row'
+   * @param {String} size - 'Width' or 'Height'
+   */
   proto.getSegmentSize = function( segment, size ) {
     var segmentName = segment + size;
     var outerSize = 'outer' + size;
@@ -2547,10 +2545,10 @@ return Item;
 
   return LayoutMode;
 
-}));
+} ) );
 
 /*!
- * Masonry v4.2.1
+ * Masonry v4.2.2
  * Cascading grid layout library
  * https://masonry.desandro.com
  * MIT License
@@ -2797,25 +2795,24 @@ return Item;
 
 ( function( window, factory ) {
   // universal module definition
-  /* jshint strict: false */ /*globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( 'isotope-layout/js/layout-modes/masonry',[
-        '../layout-mode',
-        'masonry-layout/masonry'
-      ],
-      factory );
+      '../layout-mode',
+      'masonry-layout/masonry',
+    ],
+    factory );
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
-      require('../layout-mode')
-      //require('masonry-layout')
+        require('../layout-mode')
+        // require('masonry-layout')
     );
   } else {
     // browser global
     factory(
-      window.Isotope.LayoutMode,
-      window.Masonry
+        window.Isotope.LayoutMode,
+        window.Masonry
     );
   }
 
@@ -2832,7 +2829,7 @@ return Item;
   var keepModeMethods = {
     _getElementOffset: true,
     layout: true,
-    _getMeasurement: true
+    _getMeasurement: true,
   };
 
   // inherit Masonry prototype
@@ -2862,7 +2859,7 @@ return Item;
 
   return MasonryMode;
 
-}));
+} ) );
 
 /**
  * justifyRows layout mode
@@ -2874,18 +2871,18 @@ return Item;
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( 'isotope-layout/js/layout-modes/justify-rows',[
-        '../layout-mode'
-      ],
-      factory );
+      '../layout-mode',
+    ],
+    factory );
   } else if ( typeof exports == 'object' ) {
     // CommonJS
     module.exports = factory(
-      require('../layout-mode')
+        require('../layout-mode')
     );
   } else {
     // browser global
     factory(
-      window.Isotope.LayoutMode
+        window.Isotope.LayoutMode
     );
   }
 
@@ -2904,39 +2901,39 @@ proto._resetLayout = function() {
 };
 
 proto._getRowHeight = function( rowItems, containerWidth ) {
-  containerWidth = containerWidth - rowItems.length * this.gutter;
+  containerWidth -= rowItems.length * this.gutter;
   var totalHeight = 0;
   for ( var i = 0, len = rowItems.length; i !== len; i++ ) {
-    var itemEle = rowItems[i].element,
-        w = parseInt( itemEle.getAttribute( 'data-width' ), 10 ) || rowItems[i].size.outerWidth,
-        h = parseInt( itemEle.getAttribute( 'data-height' ), 10 ) || rowItems[i].size.outerHeight;
+    var itemEle = rowItems[i].element;
+    var w = parseInt( itemEle.getAttribute('data-width'), 10 ) || rowItems[i].size.outerWidth;
+    var h = parseInt( itemEle.getAttribute('data-height'), 10 ) || rowItems[i].size.outerHeight;
 
-    totalHeight += w / h;
+    totalHeight += w/h;
   }
 
-  return containerWidth / totalHeight;
+  return containerWidth/totalHeight;
 };
 
 proto._resizeItems = function( rowItems, rowHeight ) {
   for ( var i = 0, len = rowItems.length; i !== len; i++ ) {
-    var itemEle = rowItems[i].element,
-        w = parseInt( itemEle.getAttribute( 'data-width' ), 10 ) || rowItems[i].size.outerWidth,
-        h = parseInt( itemEle.getAttribute( 'data-height' ), 10 ) || rowItems[i].size.outerHeight;
+    var itemEle = rowItems[i].element;
+    var w = parseInt( itemEle.getAttribute('data-width'), 10 ) || rowItems[i].size.outerWidth;
+    var h = parseInt( itemEle.getAttribute('data-height'), 10 ) || rowItems[i].size.outerHeight;
 
-    itemEle.style.width = rowHeight * w / h + 'px';
+    itemEle.style.width = rowHeight * w/h + 'px';
     itemEle.style.height = rowHeight + 'px';
   }
 };
 
 proto._beforeLayout = function() {
-  var maxHeight = this.options.maxHeight || 200,
-      containerWidth = this.isotope.size.innerWidth + this.gutter;
+  var maxHeight = this.options.maxHeight || 200;
+  var containerWidth = this.isotope.size.innerWidth + this.gutter;
 
-  var checkItems = this.isotope.filteredItems.slice( 0 ),
-      row, rowHeight;
-  
+  var checkItems = this.isotope.filteredItems.slice( 0 );
+  var row, rowHeight;
+
   newRow: while ( checkItems.length > 0 ) {
-    
+
     for ( var i = 0, len = checkItems.length; i !== len; i++ ) {
       row = checkItems.slice( 0, i + 1 ),
       rowHeight = this._getRowHeight( row, containerWidth );
@@ -2950,7 +2947,7 @@ proto._beforeLayout = function() {
 
     // last row
     this._resizeItems( row, Math.min( rowHeight, maxHeight ) );
-    break;  
+    break;
   }
 };
 
@@ -2966,7 +2963,7 @@ proto._getItemLayoutPosition = function( item ) {
 
   var position = {
     x: this.x,
-    y: this.y
+    y: this.y,
   };
 
   this.maxY = Math.max( this.maxY, this.y + item.size.outerHeight );
@@ -2981,7 +2978,7 @@ proto._getContainerSize = function() {
 
 return JustifyRows;
 
-}));
+} ) );
 
 /**
  * fitRows layout mode
@@ -2989,22 +2986,21 @@ return JustifyRows;
 
 ( function( window, factory ) {
   // universal module definition
-  /* jshint strict: false */ /*globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( 'isotope-layout/js/layout-modes/fit-rows',[
-        '../layout-mode'
-      ],
-      factory );
+      '../layout-mode',
+    ],
+    factory );
   } else if ( typeof exports == 'object' ) {
     // CommonJS
     module.exports = factory(
-      require('../layout-mode')
+        require('../layout-mode')
     );
   } else {
     // browser global
     factory(
-      window.Isotope.LayoutMode
+        window.Isotope.LayoutMode
     );
   }
 
@@ -3035,7 +3031,7 @@ proto._getItemLayoutPosition = function( item ) {
 
   var position = {
     x: this.x,
-    y: this.y
+    y: this.y,
   };
 
   this.maxY = Math.max( this.maxY, this.y + item.size.outerHeight );
@@ -3050,7 +3046,7 @@ proto._getContainerSize = function() {
 
 return FitRows;
 
-}));
+} ) );
 
 /**
  * vertical layout mode
@@ -3058,22 +3054,21 @@ return FitRows;
 
 ( function( window, factory ) {
   // universal module definition
-  /* jshint strict: false */ /*globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( 'isotope-layout/js/layout-modes/vertical',[
-        '../layout-mode'
-      ],
-      factory );
+      '../layout-mode',
+    ],
+    factory );
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
-      require('../layout-mode')
+        require('../layout-mode')
     );
   } else {
     // browser global
     factory(
-      window.Isotope.LayoutMode
+        window.Isotope.LayoutMode
     );
   }
 
@@ -3081,8 +3076,8 @@ return FitRows;
 'use strict';
 
 var Vertical = LayoutMode.create( 'vertical', {
-  horizontalAlignment: 0
-});
+  horizontalAlignment: 0,
+} );
 
 var proto = Vertical.prototype;
 
@@ -3105,7 +3100,7 @@ proto._getContainerSize = function() {
 
 return Vertical;
 
-}));
+} ) );
 
 /*!
  * Isotope v3.0.6
@@ -3114,61 +3109,62 @@ return Vertical;
  * or Isotope Commercial License for commercial use
  *
  * https://isotope.metafizzy.co
- * Copyright 2010-2018 Metafizzy
+ * Copyright 2010-2020 Metafizzy
  */
+
+/* eslint-disable max-params */
 
 ( function( window, factory ) {
   // universal module definition
-  /* jshint strict: false */ /*globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
-    define( [
-        'outlayer/outlayer',
-        'get-size/get-size',
-        'desandro-matches-selector/matches-selector',
-        'fizzy-ui-utils/utils',
-        'isotope-layout/js/item',
-        'isotope-layout/js/layout-mode',
-        // include default layout modes
-        'isotope-layout/js/layout-modes/masonry',
-        'isotope-layout/js/layout-modes/justify-rows',
-        'isotope-layout/js/layout-modes/fit-rows',
-        'isotope-layout/js/layout-modes/vertical'
-      ],
-      function( Outlayer, getSize, matchesSelector, utils, Item, LayoutMode ) {
+    define( 'isotope-layout/js/isotope',[
+      'outlayer/outlayer',
+      'get-size/get-size',
+      'desandro-matches-selector/matches-selector',
+      'fizzy-ui-utils/utils',
+      './item',
+      './layout-mode',
+      // include default layout modes
+      './layout-modes/masonry',
+      './layout-modes/justify-rows',
+      './layout-modes/fit-rows',
+      './layout-modes/vertical',
+    ],
+    function( Outlayer, getSize, matchesSelector, utils, Item, LayoutMode ) {
         return factory( window, Outlayer, getSize, matchesSelector, utils, Item, LayoutMode );
-      });
+      } );
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
-      window,
-      require('outlayer'),
-      require('get-size'),
-      require('desandro-matches-selector'),
-      require('fizzy-ui-utils'),
-      require('isotope-layout/js/item'),
-      require('isotope-layout/js/layout-mode'),
-      // include default layout modes
-      require('isotope-layout/js/layout-modes/masonry'),
-      require('isotope-layout/js/layout-modes/fit-rows'),
-      require('isotope-layout/js/layout-modes/justify-rows'),
-      require('isotope-layout/js/layout-modes/vertical')
+        window,
+        require('outlayer'),
+        require('get-size'),
+        require('desandro-matches-selector'),
+        require('fizzy-ui-utils'),
+        require('./item'),
+        require('./layout-mode'),
+        // include default layout modes
+        require('./layout-modes/masonry'),
+        require('./layout-modes/fit-rows'),
+        require('./layout-modes/justify-rows'),
+        require('./layout-modes/vertical')
     );
   } else {
     // browser global
     window.Isotope = factory(
-      window,
-      window.Outlayer,
-      window.getSize,
-      window.matchesSelector,
-      window.fizzyUIUtils,
-      window.Isotope.Item,
-      window.Isotope.LayoutMode
+        window,
+        window.Outlayer,
+        window.getSize,
+        window.matchesSelector,
+        window.fizzyUIUtils,
+        window.Isotope.Item,
+        window.Isotope.LayoutMode
     );
   }
 
 }( window, function factory( window, Outlayer, getSize, matchesSelector, utils,
-  Item, LayoutMode ) {
+    Item, LayoutMode ) {
 
 
 
@@ -3195,11 +3191,11 @@ var trim = String.prototype.trim ?
     sortAscending: true,
     pagination: false,
     inPage: 20,
-    page:1,
+    page: 1,
     useImagesLoaded: true,
-    lazyload:false,
-    resizeTransition: true
-  });
+    lazyload: false,
+    resizeTransition: true,
+  } );
 
   Isotope.Item = Item;
   Isotope.LayoutMode = LayoutMode;
@@ -3236,14 +3232,13 @@ var trim = String.prototype.trim ?
   proto._itemize = function() {
     var items = Outlayer.prototype._itemize.apply( this, arguments );
     // assign ID for original-order
-    for ( var i=0; i < items.length; i++ ) {
+    for ( var i = 0; i < items.length; i++ ) {
       var item = items[i];
       item.id = this.itemGUID++;
     }
     this._updateItemsSortData( items );
     return items;
   };
-
 
   // -------------------------- layout -------------------------- //
 
@@ -3257,7 +3252,6 @@ var trim = String.prototype.trim ?
     // init layout mode instance
     this.modes[ name ] = new Mode( this );
   };
-
 
   proto.layout = function() {
     // if first time doing layout, do all magic
@@ -3282,7 +3276,7 @@ var trim = String.prototype.trim ?
     this._isLayoutInited = true;
   };
 
-  //override layoutItems method
+  // override layoutItems method
   var _layoutItems = Isotope.prototype.layoutItems;
   Isotope.prototype.layoutItems = function( items, isInstant ) {
     this._beforeLayout( items, isInstant );
@@ -3301,7 +3295,7 @@ var trim = String.prototype.trim ?
     this.filteredItems = filtered.matches;
     this.notPaginatedItems = this.filteredItems;
 
-    this._sort(); 
+    this._sort();
 
     if ( this.options.pagination ) {
       var paginationResult = this._pagination();
@@ -3341,7 +3335,6 @@ var trim = String.prototype.trim ?
     this.hide( filtered.needHide );
   };
 
-
   // HACK
   // Don't animate/transition first layout
   // Or don't animate/transition other layouts
@@ -3367,19 +3360,19 @@ var trim = String.prototype.trim ?
     this.once( 'layoutComplete', function() {
       isLayoutComplete = true;
       arrangeParallelCallback();
-    });
+    } );
     this.once( 'hideComplete', function() {
       isHideComplete = true;
       arrangeParallelCallback();
-    });
+    } );
     this.once( 'revealComplete', function() {
       isRevealComplete = true;
       arrangeParallelCallback();
-    });
+    } );
   };
 
   // -------------------------- page -------------------------- //
-  
+
   // private method to devide filtered items to pages
   proto._pagination = function() {
     // move to fist page if filter changed
@@ -3393,14 +3386,15 @@ var trim = String.prototype.trim ?
       this.notPaginatedItems = this.filteredItems;
     }
 
-    var page = this.options.page,
-        items = this.notPaginatedItems,
-        startItemInPage = ( page - 1 ) * this.options.inPage,
-        endItemInPage = startItemInPage + this.options.inPage - 1,
-        inPage = [], needHide = [], needReveal = [];
+    var page = this.options.page;
+    var items = this.notPaginatedItems;
+    var startItemInPage = ( page - 1 ) * this.options.inPage;
+    var endItemInPage = startItemInPage + this.options.inPage - 1;
+    var inPage = []; var needHide = []; var
+            needReveal = [];
 
-    var totalPages = Math.ceil( items.length / this.options.inPage ),
-        pageChanged = this._lastPage !== page || this._totalPages !== totalPages;
+    var totalPages = Math.ceil( items.length / this.options.inPage );
+    var pageChanged = this._lastPage !== page || this._totalPages !== totalPages;
 
     this._lastPage = page;
     this._totalPages = totalPages;
@@ -3418,7 +3412,7 @@ var trim = String.prototype.trim ?
         needHide.push( item );
       }
     }
-    
+
     // update filtered items
     this.filteredItems = inPage;
 
@@ -3429,7 +3423,7 @@ var trim = String.prototype.trim ?
     return {
       matches: inPage,
       needHide: needHide,
-      needReveal: needReveal
+      needReveal: needReveal,
     };
 
   };
@@ -3483,7 +3477,7 @@ var trim = String.prototype.trim ?
     var test = this._getFilterTest( filter );
 
     // test each item
-    for ( var i=0; i < items.length; i++ ) {
+    for ( var i = 0; i < items.length; i++ ) {
       var item = items[i];
       if ( item.isIgnored ) {
         continue;
@@ -3493,7 +3487,7 @@ var trim = String.prototype.trim ?
       // item.isFilterMatched = isMatched;
       // add to matches if its a match
       if ( isMatched ) {
-          matches.push( item );
+        matches.push( item );
       }
       // add to additional group if item needs to be hidden or revealed
       if ( isMatched && item.isHidden ) {
@@ -3507,7 +3501,7 @@ var trim = String.prototype.trim ?
     return {
       matches: matches,
       needReveal: hiddenMatched,
-      needHide: visibleUnmatched
+      needHide: visibleUnmatched,
     };
   };
 
@@ -3534,8 +3528,7 @@ var trim = String.prototype.trim ?
   // -------------------------- sorting -------------------------- //
 
   /**
-   * @params {Array} elems
-   * @public
+   * @param {Array} elems
    */
   proto.updateSortData = function( elems ) {
     // get items
@@ -3552,28 +3545,6 @@ var trim = String.prototype.trim ?
     this._updateItemsSortData( items );
   };
 
-  proto._getSorters = function() {
-    var getSortData = this.options.getSortData;
-    for ( var key in getSortData ) {
-      var sorter = getSortData[ key ];
-      this._sorters[ key ] = mungeSorter( sorter );
-    }
-  };
-
-  /**
-   * @params {Array} items - of Isotope.Items
-   * @private
-   */
-  proto._updateItemsSortData = function( items ) {
-    // do not update if no items
-    var len = items && items.length;
-
-    for ( var i=0; len && i < len; i++ ) {
-      var item = items[i];
-      item.updateSortData();
-    }
-  };
-
   // ----- munge sorter ----- //
 
   // encapsulate this, as we just need mungeSorter
@@ -3584,7 +3555,7 @@ var trim = String.prototype.trim ?
     // `[foo-bar]` will use attribute
     // you can also add parser
     // `.foo-bar parseInt` will parse that as a number
-    function mungeSorter( sorter ) {
+    function mngSorter( sorter ) {
       // if not a string, return function or whatever it is
       if ( typeof sorter != 'string' ) {
         return sorter;
@@ -3603,9 +3574,9 @@ var trim = String.prototype.trim ?
         return elem && parser( getValue( elem ) );
       } :
       // otherwise just return value
-      function( elem ) {
-        return elem && getValue( elem );
-      };
+        function( elem ) {
+          return elem && getValue( elem );
+        };
 
       return sorter;
     }
@@ -3626,17 +3597,41 @@ var trim = String.prototype.trim ?
       };
     }
 
-    return mungeSorter;
-  })();
+    return mngSorter;
+  } )();
+
+  proto._getSorters = function() {
+    var getSortData = this.options.getSortData;
+    for ( var key in getSortData ) {
+      var sorter = getSortData[ key ];
+      this._sorters[ key ] = mungeSorter( sorter );
+    }
+  };
+
+  /**
+   * @param {Array} items - of Isotope.Items
+   */
+  proto._updateItemsSortData = function( items ) {
+    // do not update if no items
+    var len = items && items.length;
+    if ( !len ) {
+      return;
+    }
+
+    for ( var i = 0; i < len; i++ ) {
+      var item = items[i];
+      item.updateSortData();
+    }
+  };
 
   // parsers used in getSortData shortcut strings
   Isotope.sortDataParsers = {
-    'parseInt': function( val ) {
+    parseInt: function( val ) {
       return parseInt( val, 10 );
     },
-    'parseFloat': function( val ) {
+    parseFloat: function( val ) {
       return parseFloat( val );
-    }
+    },
   };
 
   // ----- sort method ----- //
@@ -3663,7 +3658,7 @@ var trim = String.prototype.trim ?
 
   // check if sortBys is same as start of sortHistory
   proto._getIsSameSortBy = function( sortBys ) {
-    for ( var i=0; i < sortBys.length; i++ ) {
+    for ( var i = 0; i < sortBys.length; i++ ) {
       if ( sortBys[i] != this.sortHistory[i] ) {
         return false;
       }
@@ -3711,15 +3706,15 @@ var trim = String.prototype.trim ?
     Outlayer.prototype._resetLayout.call( this );
     this._mode()._resetLayout();
   };
-  
-  Isotope.prototype._beforeLayout = function ( items, isInstant ) {
+
+  Isotope.prototype._beforeLayout = function( items, isInstant ) {
     var mode = this._mode();
     if ( mode._beforeLayout ) {
       mode._beforeLayout( items, isInstant );
     }
-  };  
+  };
 
-  proto._getItemLayoutPosition = function( item  ) {
+  proto._getItemLayoutPosition = function( item ) {
     return this._mode()._getItemLayoutPosition( item );
   };
 
@@ -3797,14 +3792,14 @@ var trim = String.prototype.trim ?
     var filteredItems = this._filterRevealAdded( items, !pagination );
 
     // layout previous items
-    if ( !pagination )  { 
+    if ( !pagination ) {
       this.layoutItems( this.filteredItems );
       // add to items and filteredItems
       this.filteredItems = filteredItems.concat( this.filteredItems );
     } else {
       // add new items to the notPaginatedItems instead of filtered items, it will be filtered again by pagination method next.
       this.notPaginatedItems = filteredItems.concat( this.notPaginatedItems );
-      var paginateResult = this._pagination(); 
+      var paginateResult = this._pagination();
       this._hideRevealItems( paginateResult );
       this.layoutItems( this.filteredItems );
     }
@@ -3824,7 +3819,7 @@ var trim = String.prototype.trim ?
 
   /**
    * Filter, sort, and layout newly-appended item elements
-   * @param {Array or NodeList or Element} elems
+   * @param {[Array, NodeList, Element]} elems
    */
   proto.insert = function( elems ) {
     var items = this.addItems( elems );
@@ -3834,19 +3829,19 @@ var trim = String.prototype.trim ?
     // append item elements
     var i, item;
     var len = items.length;
-    for ( i=0; i < len; i++ ) {
+    for ( i = 0; i < len; i++ ) {
       item = items[i];
       this.element.appendChild( item.element );
     }
     // filter new stuff
     var filteredInsertItems = this._filter( items ).matches;
     // set flag
-    for ( i=0; i < len; i++ ) {
+    for ( i = 0; i < len; i++ ) {
       items[i].isLayoutInstant = true;
     }
     this.arrange();
     // reset flag
-    for ( i=0; i < len; i++ ) {
+    for ( i = 0; i < len; i++ ) {
       delete items[i].isLayoutInstant;
     }
     this.reveal( filteredInsertItems );
@@ -3861,7 +3856,10 @@ var trim = String.prototype.trim ?
     // bail if no items to remove
     var len = removeItems && removeItems.length;
     // remove elems from filteredItems
-    for ( var i=0; len && i < len; i++ ) {
+    if ( !len ) {
+      return;
+    }
+    for ( var i = 0; i < len; i++ ) {
       var item = removeItems[i];
       // remove item from collection
       utils.removeFrom( this.filteredItems, item );
@@ -3870,7 +3868,7 @@ var trim = String.prototype.trim ?
 
   proto.shuffle = function() {
     // update random sortData
-    for ( var i=0; i < this.items.length; i++ ) {
+    for ( var i = 0; i < this.items.length; i++ ) {
       var item = this.items[i];
       item.sortData.random = Math.random();
     }
@@ -3884,7 +3882,7 @@ var trim = String.prototype.trim ?
    * kind of hacky to have this in the first place
    * @param {Function} fn
    * @param {Array} args
-   * @returns ret
+   * @returns {Object} returnValue
    * @private
    */
   proto._noTransition = function( fn, args ) {
@@ -3908,12 +3906,12 @@ var trim = String.prototype.trim ?
   proto.getFilteredItemElements = function() {
     return this.filteredItems.map( function( item ) {
       return item.element;
-    });
+    } );
   };
 
   // -----  ----- //
 
   return Isotope;
 
-}));
+} ) );
 
